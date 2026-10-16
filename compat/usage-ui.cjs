@@ -30,12 +30,12 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .profile-handle{font-size:13px;color:var(--pulse-muted);margin-top:3px;cursor:help;transition:color 0.15s ease}
     .profile-handle:hover{color:var(--pulse-accent)}
     
-    /* Profile Hero Metrics Bar (4 Columns, Centered Content) */
+    /* Profile Hero Metrics Bar (4 Columns: Label Left, Number Centered) */
     .codex-bar{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:12px;padding:15px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;box-shadow:0 4px 16px var(--pulse-shadow);margin-bottom:2px}
-    .codex-col{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2px 14px;min-width:0}
+    .codex-col{display:flex;flex-direction:column;align-items:stretch;padding:2px 14px;min-width:0}
     .codex-col:not(:last-child){border-right:1px solid var(--pulse-separator)}
-    .codex-label{font-size:13px;color:var(--pulse-muted);margin-bottom:6px;white-space:nowrap;text-align:center}
-    .codex-num{font-size:24px;font-weight:650;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap;display:flex;align-items:baseline;justify-content:center;gap:5px}
+    .codex-label{font-size:13px;color:var(--pulse-muted);margin-bottom:6px;white-space:nowrap;text-align:left;align-self:flex-start}
+    .codex-num{font-size:24px;font-weight:650;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap;display:flex;align-items:baseline;justify-content:center;text-align:center;width:100%;gap:5px}
     .codex-unit{font-size:12.5px;font-weight:400;color:var(--pulse-muted)}
     
     /* Card Container Wrapper */
@@ -53,7 +53,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .seg-btn:hover{color:var(--pulse-foreground)}
     .seg-btn.active,.seg-btn[aria-pressed=true]{background:var(--pulse-control);color:var(--pulse-foreground);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.12)}
     
-    /* Year & Quarter Picker */
+    /* Year Picker */
     .year-picker{position:relative;flex:none}
     .year-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:76px;height:30px;padding:0 10px;background:var(--pulse-control);color:var(--pulse-foreground);font-size:12px;border-radius:7px}
     .year-trigger:hover,.year-trigger[aria-expanded=true]{background:var(--pulse-hover)}
@@ -67,19 +67,23 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .year-check{color:var(--pulse-accent);width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:0}
     .year-option[aria-selected=true] .year-check{opacity:1}
     
-    /* Heatmap Grid with Diagonal Ripple Transition */
+    /* Heatmap Grid with Diagonal Ripple Transition (Day & Week) */
     .heat-wrap{overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;-ms-overflow-style:none}
     .heat-wrap::-webkit-scrollbar{display:none;width:0;height:0}
-    .calendar{max-width:640px;margin-inline:auto;width:100%}
+    .calendar{width:100%;min-width:0;margin-inline:auto}
     .months{display:grid;margin-left:31px;font-size:11.5px;color:var(--pulse-muted);margin-bottom:8px}
+    .months.week{margin-left:36px}
     .months span{white-space:nowrap}
     .heat-row{display:flex;gap:10px}
     .weekdays{display:grid;grid-template-rows:repeat(7,1fr);width:22px;flex:none;font-size:10.5px;color:var(--pulse-muted)}
+    .weekdays.week{grid-template-rows:repeat(2,1fr);width:26px;font-size:11.5px;align-items:center}
     .heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:4px;width:100%}
+    .heat.week{grid-template-rows:repeat(2,1fr)!important;grid-auto-flow:row!important;gap:6px!important}
     .heat button{border:0;border-radius:4px;padding:0;min-width:0;aspect-ratio:1;background:var(--pulse-hover);outline-offset:1px;cursor:pointer;transition:transform 0.1s ease;animation:cellPop 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards}
+    .heat.week button{aspect-ratio:1;border-radius:5px;max-height:36px}
     @keyframes cellPop{0%{transform:scale(0.15);opacity:0}100%{transform:scale(1);opacity:1}}
     @media(prefers-reduced-motion:reduce){.heat button{animation:none}}
-    .heat button:hover{transform:scale(1.25);z-index:2}
+    .heat button:hover{transform:scale(1.22);z-index:2}
     .heat button[data-level="1"],.swatch[data-level="1"]{background:color-mix(in srgb,var(--pulse-accent) 22%,var(--pulse-hover))}
     .heat button[data-level="2"],.swatch[data-level="2"]{background:color-mix(in srgb,var(--pulse-accent) 45%,var(--pulse-hover))}
     .heat button[data-level="3"],.swatch[data-level="3"]{background:color-mix(in srgb,var(--pulse-accent) 68%,var(--pulse-hover))}
@@ -115,8 +119,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .chart-empty{position:absolute;left:0;right:0;top:40%;text-align:center;color:var(--pulse-muted);font-size:13px;pointer-events:none}
     
     /* Cumulative Area Line Chart */
-    .total-chart-svg{width:100%;height:100%;overflow:visible}
-    .total-line-group{transform-origin:bottom;animation:areaRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards}
+    .total-chart-svg{position:absolute;left:0;top:0;width:100%;height:224px;overflow:visible;pointer-events:none}
+    .total-line-group{transform-origin:bottom;animation:areaRise 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards}
+    .total-dot{transition:r 0.15s ease}
+    .total-x-label{position:absolute;bottom:1px;transform:translateX(-50%);font-size:11.5px;color:var(--pulse-muted);white-space:nowrap;pointer-events:none}
     @keyframes areaRise{from{transform:scaleY(0);opacity:0.2}to{transform:scaleY(1);opacity:1}}
     @media(prefers-reduced-motion:reduce){.total-line-group{animation:none}}
     
@@ -263,17 +269,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
             </button>
             <div id="year-menu" class="year-menu" role="listbox" aria-label="Year" popover="manual"></div>
           </div>
-          <div class="year-picker" id="quarter-picker">
-            <button id="quarter" type="button" class="year-trigger" aria-label="Quarter" aria-haspopup="listbox" aria-controls="quarter-menu" aria-expanded="false">
-              <span id="quarter-label">10-12月</span>
-              <svg class="year-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
-            </button>
-            <div id="quarter-menu" class="year-menu" role="listbox" aria-label="Quarter" popover="manual"></div>
-          </div>
         </div>
       </div>
 
-      <!-- 1. Daily Heatmap Grid View -->
+      <!-- 1. Heatmap Grid View (Both Daily & Weekly) -->
       <div id="heat-view">
         <div class="heat-wrap">
           <div class="calendar">
@@ -294,17 +293,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
         </div>
       </div>
 
-      <!-- 2. Weekly Bar Chart View -->
-      <div id="week-view" hidden>
-        <div class="chart-wrap">
-          <div class="chart">
-            <div class="axis" id="week-axis"></div>
-            <div class="plot" id="week-plot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Cumulative Total Line Chart View -->
+      <!-- 2. Cumulative Total Line Chart View -->
       <div id="total-view" hidden>
         <div class="chart-wrap">
           <div class="chart">
@@ -430,19 +419,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   view.append(page);
 
   const $=id=>view.getElementById(id),text=(id,value)=>{if($(id)&&$(id).textContent!==value)$(id).textContent=value;};
-  let value=null,heatMode='day',trendMode='daily',year=null,quarter=null,anchor=null,selectedDate=null,disabledModels=new Set(),lastKey='',busy=false,opener=null;
+  let value=null,heatMode='day',trendMode='daily',year=null,anchor=null,selectedDate=null,disabledModels=new Set(),lastKey='',busy=false,opener=null;
   let disposed=false,refreshMotion=null,refreshDelay=null,finishRefresh=null,accountKey=null,tipTarget=null,tipModel=null;
   let auditPage=1;const auditPageSize=10;
   const zh=()=>language.language==='zh-CN',w=(cn,en)=>zh()?cn:en;
-  const getQuarterRange=(y,q)=>{
-    const ranges=[
-      {start:`${y}-01-01`,end:`${y}-03-31`,label:zh()?'1-3月':'Jan-Mar',mStart:1,mEnd:3},
-      {start:`${y}-04-01`,end:`${y}-06-30`,label:zh()?'4-6月':'Apr-Jun',mStart:4,mEnd:6},
-      {start:`${y}-07-01`,end:`${y}-09-30`,label:zh()?'7-9月':'Jul-Sep',mStart:7,mEnd:9},
-      {start:`${y}-10-01`,end:`${y}-12-31`,label:zh()?'10-12月':'Oct-Dec',mStart:10,mEnd:12}
-    ];
-    return ranges[(q||4)-1]||ranges[3];
-  };
 
   const full=n=>Number(n||0).toLocaleString(zh()?'zh-CN':'en-US');
   const compact=n=>{n=Number(n||0);const limits=[[1e9,'B'],[1e6,'M'],[1e3,'K']];for(const [base,suffix]of limits)if(n>=base)return (n/base).toFixed(1).replace(/\.0$/,'')+suffix;return full(n);};
@@ -564,105 +544,128 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     button.addEventListener('blur',()=>{$('tip').hidden=true;tipTarget=null;tipModel=null;highlightModel(null);});
   };
 
-  /* Render 1: Daily Heatmap Grid (Diagonal Ripple Transition & Cell Click to Model Jump) */
+  /* Render 1: Heatmap Grid (Both Day and Week as Contribution Grid) */
   function renderHeat(){
     if(!value)return;
-    const q=getQuarterRange(year,quarter);
-    const start=week(q.start),end=q.end,weeks=Math.floor((Date.parse(end)-Date.parse(start))/604800000)+1;
+    const start=week(year+'-01-01'),end=year+'-12-31';
+    const weeks=Math.floor((Date.parse(end)-Date.parse(start))/604800000)+1;
     $('heat').replaceChildren();$('months').replaceChildren();$('weekdays').replaceChildren();
-    $('heat').style.gridTemplateColumns=`repeat(${weeks},minmax(0,1fr))`;
-    const buckets=[];
-    for(let i=0;i<weeks*7;i++){
-      const date=add(start,i);
-      buckets.push(totals(date,date));
-    }
-    const max=Math.max(1,...buckets.map(b=>b.total));
-    for(const [i,bucket]of buckets.entries()){
-      const button=node('button','');button.type='button';
-      const future=bucket.from>value.today||bucket.to<q.start||bucket.from>q.end;
-      button.dataset.level=bucket.total===0?'0':String(Math.min(4,Math.ceil(bucket.total/max*4)));
-      if(future){button.className='future';button.disabled=true;}
+    
+    if(heatMode==='day'){
+      $('heat').className='heat';
+      $('heat').style.gridTemplateColumns=`repeat(${weeks},minmax(0,1fr))`;
+      $('weekdays').className='weekdays';
+      $('months').className='months';
+      $('months').style.gridTemplateColumns=`repeat(${weeks},minmax(0,1fr))`;
+      $('months').style.marginLeft='31px';
       
-      // Diagonal Ripple Delay: (col + row) * 8ms
-      const col=Math.floor(i/7),row=i%7;
-      button.style.animationDelay=((col+row)*8)+'ms';
-      
-      if(!future){
-        bindBucket(button,bucket);
-        // Cell Click: jump to Trend Section in Model mode and show that day's result!
-        button.addEventListener('click',()=>{
-          selectedDate=bucket.from;
-          trendMode='model';
-          for(const btn of view.querySelectorAll('#trend-controls button'))btn.classList.toggle('active',btn.dataset.trend==='model');
-          renderTrendSection();
-          $('section-trend')?.scrollIntoView({behavior:'smooth',block:'nearest'});
-        });
+      const buckets=[];
+      for(let i=0;i<weeks*7;i++){
+        const date=add(start,i);
+        buckets.push(totals(date,date));
       }
-      button.tabIndex=-1;
-      $('heat').append(button);
+      const max=Math.max(1,...buckets.map(b=>b.total));
+      for(const [i,bucket]of buckets.entries()){
+        const button=node('button','');button.type='button';
+        const future=bucket.from>value.today||bucket.to<year+'-01-01'||bucket.from>year+'-12-31';
+        button.dataset.level=bucket.total===0?'0':String(Math.min(4,Math.ceil(bucket.total/max*4)));
+        if(future){button.className='future';button.disabled=true;}
+        
+        // Diagonal Ripple Delay
+        const col=Math.floor(i/7),row=i%7;
+        button.style.animationDelay=((col+row)*8)+'ms';
+        
+        if(!future){
+          bindBucket(button,bucket);
+          button.addEventListener('click',()=>{
+            selectedDate=bucket.from;
+            trendMode='model';
+            for(const btn of view.querySelectorAll('#trend-controls button'))btn.classList.toggle('active',btn.dataset.trend==='model');
+            renderTrendSection();
+            $('section-trend')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+          });
+        }
+        button.tabIndex=-1;
+        $('heat').append(button);
+      }
+      for(let m=1;m<=12;m++){
+        const date=`${year}-${String(m).padStart(2,'0')}-01`,col=Math.floor((Date.parse(date)-Date.parse(start))/604800000)+1;
+        const label=node('span','',zh()?m+'月':['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]);
+        label.style.gridColumn=col;label.style.gridRow=1;$('months').append(label);
+      }
+      for(let i=0;i<7;i++)$('weekdays').append(node('span','',i%2===0?(zh()?['一','','三','','五','','日'][i]:['M','','W','','F','','S'][i]):''));
+    }else{
+      /* Weekly Grid: 2 rows of 26 columns */
+      const cols=Math.ceil(weeks/2);
+      $('heat').className='heat week';
+      $('heat').style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+      $('weekdays').className='weekdays week';
+      $('months').className='months week';
+      $('months').style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+      
+      const buckets=[];
+      for(let i=0;i<weeks;i++){
+        const from=add(start,i*7),to=add(from,6);
+        buckets.push(totals(from<year+'-01-01'?year+'-01-01':from,to>year+'-12-31'?year+'-12-31':to));
+      }
+      const max=Math.max(1,...buckets.map(b=>b.total));
+      for(const [i,bucket]of buckets.entries()){
+        const button=node('button','');button.type='button';
+        const future=bucket.from>value.today||bucket.to<year+'-01-01'||bucket.from>year+'-12-31';
+        button.dataset.level=bucket.total===0?'0':String(Math.min(4,Math.ceil(bucket.total/max*4)));
+        if(future){button.className='future';button.disabled=true;}
+        const col=i%cols,row=Math.floor(i/cols);
+        button.style.animationDelay=((col+row*2)*7)+'ms';
+        if(!future){
+          bindBucket(button,bucket);
+          button.addEventListener('click',()=>{
+            selectedDate=bucket.from;
+            trendMode='model';
+            for(const btn of view.querySelectorAll('#trend-controls button'))btn.classList.toggle('active',btn.dataset.trend==='model');
+            renderTrendSection();
+            $('section-trend')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+          });
+        }
+        button.tabIndex=-1;
+        $('heat').append(button);
+      }
+      
+      // Left row labels: Row 1 = 上半年 (H1), Row 2 = 下半年 (H2)
+      $('weekdays').append(node('span','',zh()?'上':'H1'));
+      $('weekdays').append(node('span','',zh()?'下':'H2'));
+      
+      // Top month labels: 1月 to 6月 (spread across 26 columns)
+      const mLabels=zh()?['1月','2月','3月','4月','5月','6月']:['Jan','Feb','Mar','Apr','May','Jun'];
+      for(let i=0;i<6;i++){
+        const col=Math.floor(i*cols/6)+1;
+        const label=node('span','',mLabels[i]);
+        label.style.gridColumn=col;label.style.gridRow=1;$('months').append(label);
+      }
     }
+    
     const usable=[...$('heat').children].filter(b=>!b.disabled),lastActive=[...$('heat').children].reverse().find(b=>!b.disabled&&b.dataset.level!=='0');
     if(usable.length)(lastActive||usable.at(-1)).tabIndex=0;
-    $('months').style.gridTemplateColumns=`repeat(${weeks},minmax(0,1fr))`;
-    for(let m=q.mStart;m<=q.mEnd;m++){
-      const date=`${year}-${String(m).padStart(2,'0')}-01`,col=Math.floor((Date.parse(date)-Date.parse(start))/604800000)+1;
-      const label=node('span','',zh()?m+'月':['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]);
-      label.style.gridColumn=col;label.style.gridRow=1;$('months').append(label);
-    }
-    for(let i=0;i<7;i++)$('weekdays').append(node('span','',i%2===0?(zh()?['一','','三','','五','','日'][i]:['M','','W','','F','','S'][i]):''));
-    const annual=totals(q.start,q.end);
-    text('heat-summary',w(`${year} 年 · ${q.label} · ${full(annual.total)} Token`,`${year} · ${q.label} · ${full(annual.total)} tokens`));
+    
+    const annual=totals(year+'-01-01',year+'-12-31');
+    text('heat-summary',w(
+      `${year} 年 · ${heatMode==='day'?'每日用量':'每周统计'} · ${full(annual.total)} Token`,
+      `${year} · ${heatMode==='day'?'Daily Usage':'Weekly Usage'} · ${full(annual.total)} tokens`
+    ));
   }
 
-  /* Render 2: Weekly Stacked Bar Chart */
-  function renderWeeklyActivity(){
-    if(!value)return;syncPalette();
-    const q=getQuarterRange(year,quarter);
-    const start=week(q.start),end=q.end,weeks=Math.floor((Date.parse(end)-Date.parse(start))/604800000)+1;
-    const buckets=[];
-    for(let i=0;i<weeks;i++){
-      const from=add(start,i*7),to=add(from,6);
-      buckets.push(totals(from<q.start?q.start:from,to>q.end?q.end:to,true));
-    }
-    const max=Math.max(1,...buckets.map(b=>b.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
-    $('week-axis').replaceChildren();$('week-plot').replaceChildren();
-    for(let i=0;i<=4;i++){
-      const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';$('week-axis').append(label);
-      const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';$('week-plot').append(line);
-    }
-    for(const [i,bucket]of buckets.entries()){
-      const button=node('button','bar-column');button.type='button';
-      const stack=node('div','stack');
-      stack.style.animationDelay=(i*12)+'ms';
-      stack.style.width='24px';stack.style.maxWidth='28px';
-      const segments=value.models.filter(m=>bucket.models[m]?.total>0);
-      for(const [j,model]of segments.entries()){
-        const r=bucket.models[model],bar=node('i','bar-segment'),height=r.total/ceiling*227;
-        bar.dataset.model=model;bar.setAttribute('aria-hidden','true');bar.style.setProperty('--model-color',color(model));bar.style.height=height+'px';
-        if(j&&height>=3)bar.style.boxShadow='inset 0 -1px 0 color-mix(in srgb,var(--pulse-background) 48%,transparent)';
-        stack.append(bar);
-      }
-      if(!bucket.total)stack.append(node('i','empty-bar'));
-      button.append(stack);
-      button.append(node('span','x-label',bucket.from.slice(5)));
-      bindBucket(button,bucket);
-      $('week-plot').append(button);
-    }
-  }
-
-  /* Render 3: Cumulative Total Tokens Line & Area Chart */
+  /* Render 2: Cumulative Total Tokens Line & Area Chart with Points & X-Axis Labels */
   function renderTotalChart(){
     if(!value)return;syncPalette();
-    const q=getQuarterRange(year,quarter);
-    const qDays=(value.days||[]).filter(d=>d.date>=q.start&&d.date<=q.end);
+    const start=year+'-01-01',end=year+'-12-31';
+    const yearDays=(value.days||[]).filter(d=>d.date>=start&&d.date<=end);
     const plot=$('total-plot'),axis=$('total-axis');
     axis.replaceChildren();plot.replaceChildren();
-    if(!qDays.length){
-      plot.append(node('div','chart-empty',w('该季度暂无用量记录','No usage recorded in this quarter')));
+    if(!yearDays.length){
+      plot.append(node('div','chart-empty',w('该年份暂无用量记录','No usage recorded in this year')));
       return;
     }
     let cum=0;
-    const points=qDays.map(d=>{
+    const points=yearDays.map(d=>{
       const dayTotal=Object.values(d.models).reduce((n,r)=>n+r.total,0);
       cum+=dayTotal;
       return {date:d.date,dayTotal,cumulative:cum,models:d.models,requests:Object.values(d.models).reduce((n,r)=>n+r.requests,0)};
@@ -670,20 +673,24 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     const maxCum=points.at(-1)?.cumulative||1;
     const ceiling=maxCum>1?Math.ceil(maxCum/(10**Math.floor(Math.log10(maxCum))))*10**Math.floor(Math.log10(maxCum)):1;
     for(let i=0;i<=4;i++){
-      const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';axis.append(label);
-      const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';plot.append(line);
+      const label=node('span','',compact(ceiling*i/4));label.style.bottom=(22+(246-22)*i/4)+'px';axis.append(label);
+      const line=node('i','grid-line');line.style.bottom=(22+(246-22)*i/4)+'px';plot.append(line);
     }
     
-    // SVG Line & Gradient Area Path
-    const svgW=1000,svgH=227;
+    // SVG Line, Gradient Area, and Discrete Dots
+    const svgW=1000,svgH=224; // Exactly matches chart bottom 22px
     const coords=points.map((pt,i)=>{
       const x=points.length>1?(i/(points.length-1))*svgW:svgW/2;
-      const y=svgH-(pt.cumulative/ceiling)*(svgH-16);
+      const y=svgH-(pt.cumulative/ceiling)*svgH;
       return [x,y];
     });
     const pathD='M '+coords.map(([x,y])=>`${x.toFixed(1)},${y.toFixed(1)}`).join(' L ');
     const areaD=pathD+` L ${svgW},${svgH} L 0,${svgH} Z`;
     
+    const dotsSvg=coords.map(([cx,cy])=>`
+      <circle class="total-dot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="3.5" fill="var(--pulse-accent)" stroke="var(--pulse-card)" stroke-width="1.8"/>
+    `).join('');
+
     const svgWrap=document.createElementNS('http://www.w3.org/2000/svg','svg');
     svgWrap.setAttribute('viewBox',`0 0 ${svgW} ${svgH}`);
     svgWrap.setAttribute('preserveAspectRatio','none');
@@ -698,14 +705,32 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       <g class="total-line-group">
         <path d="${areaD}" fill="url(#areaGrad)"/>
         <path d="${pathD}" fill="none" stroke="var(--pulse-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="total-dots-group">
+          ${dotsSvg}
+        </g>
       </g>
       <line id="total-cursor-line" x1="0" y1="0" x2="0" y2="${svgH}" stroke="var(--pulse-accent)" stroke-width="1.2" stroke-dasharray="3,3" opacity="0"/>
-      <circle id="total-cursor-dot" r="4.5" fill="var(--pulse-accent)" stroke="var(--pulse-background)" stroke-width="2" opacity="0"/>
+      <circle id="total-cursor-dot" r="5.5" fill="var(--pulse-accent)" stroke="var(--pulse-background)" stroke-width="2.5" opacity="0"/>
     `);
     
-    const lineEl=svgWrap.querySelector('#total-cursor-line'),dotEl=svgWrap.querySelector('#total-cursor-dot');
     plot.append(svgWrap);
+
+    // X-Axis Date Labels across the bottom
+    const labelStep=Math.max(1,Math.ceil((points.length-1)/7));
+    const labelIndices=new Set();
+    for(let i=0;i<points.length;i+=labelStep)labelIndices.add(i);
+    labelIndices.add(points.length-1);
+    for(const idx of labelIndices){
+      const pt=points[idx];
+      const [cx]=coords[idx];
+      const lbl=node('span','total-x-label',pt.date.slice(5));
+      lbl.style.left=(cx/svgW*100)+'%';
+      if(idx===0)lbl.style.transform='translateX(0)';
+      else if(idx===points.length-1)lbl.style.transform='translateX(-100%)';
+      plot.append(lbl);
+    }
     
+    const lineEl=svgWrap.querySelector('#total-cursor-line'),dotEl=svgWrap.querySelector('#total-cursor-dot');
     plot.addEventListener('pointermove',e=>{
       const rect=plot.getBoundingClientRect();
       const relX=(e.clientX-rect.left)/rect.width;
@@ -724,13 +749,8 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   }
 
   function highlightModel(model){
-    if(model){
-      $('trend-plot').dataset.highlight=model;
-      if($('week-plot'))$('week-plot').dataset.highlight=model;
-    }else{
-      delete $('trend-plot').dataset.highlight;
-      if($('week-plot'))delete $('week-plot').dataset.highlight;
-    }
+    if(model)$('trend-plot').dataset.highlight=model;
+    else delete $('trend-plot').dataset.highlight;
     for(const bar of view.querySelectorAll('.bar-segment')){
       if(model&&bar.dataset.model===model)bar.dataset.highlight='true';else delete bar.dataset.highlight;
     }
@@ -990,9 +1010,8 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       else b.textContent=w('模型统计','Models');
     }
     
-    // Switch between Daily Heatmap, Weekly Bar Chart, and Cumulative Total Chart
-    $('heat-view').hidden=heatMode!=='day';
-    $('week-view').hidden=heatMode!=='week';
+    // Switch between Heatmap Grid (Day or Week) and Cumulative Total Chart
+    $('heat-view').hidden=heatMode==='total';
     $('total-view').hidden=heatMode!=='total';
     for(const b of view.querySelectorAll('[data-heat]'))b.classList.toggle('active',b.dataset.heat===heatMode);
 
@@ -1004,8 +1023,6 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
         option.addEventListener('click',()=>{year=String(y);syncYear();closeYear();renderActivityMode();});return option;}));$('year').dataset.years=years.join(',');
     }
     syncYear();
-    buildQuarterMenu();
-    syncQuarter();
     text('coverage',w(`已记录 ${full(value.requests)} 次请求${value.firstDate?' · 始于 '+value.firstDate:''}`,`${full(value.requests)} requests recorded${value.firstDate?' · since '+value.firstDate:''}`));
     text('timezone',value.timeZone+' · '+(value.syncing||value.retryingConversations>0?w('正在同步历史…','Syncing history…'):w('本地统计','Local usage')));
     const alerts=[];if(value.unknownRequests)alerts.push(w(`${value.unknownRequests} 次请求日期未知，共 ${compact(value.unknownTokens)} Token`,`${value.unknownRequests} undated requests · ${compact(value.unknownTokens)} tokens`));
@@ -1020,16 +1037,19 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   }
 
   function renderActivityMode(){
-    if(heatMode==='day')renderHeat();
-    else if(heatMode==='week')renderWeeklyActivity();
-    else renderTotalChart();
+    if(heatMode==='total'){
+      $('heat-view').hidden=true;
+      $('total-view').hidden=false;
+      renderTotalChart();
+    }else{
+      $('heat-view').hidden=false;
+      $('total-view').hidden=true;
+      renderHeat();
+    }
   }
 
   for(const b of view.querySelectorAll('[data-heat]'))b.addEventListener('click',()=>{
     heatMode=b.dataset.heat;
-    $('heat-view').hidden=heatMode!=='day';
-    $('week-view').hidden=heatMode!=='week';
-    $('total-view').hidden=heatMode!=='total';
     for(const btn of view.querySelectorAll('[data-heat]'))btn.classList.toggle('active',btn.dataset.heat===heatMode);
     renderActivityMode();
   });
@@ -1052,7 +1072,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     menu.style.top=(below+height<=bounds.bottom-12?below:Math.max(bounds.top+12,r.top-height-7))+'px';
   }
   function openYear(){
-    $('tip').hidden=true;closeQuarter(false);$('year-menu').showPopover();$('year').setAttribute('aria-expanded','true');positionYear();
+    $('tip').hidden=true;$('year-menu').showPopover();$('year').setAttribute('aria-expanded','true');positionYear();
     ($('year-menu').querySelector('[aria-selected=true]')||$('year-menu').firstElementChild)?.focus({preventScroll:true});
   }
   $('year').addEventListener('click',()=>{$('year-menu').matches(':popover-open')?closeYear():openYear();});
@@ -1063,52 +1083,12 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     if(next!==null){event.preventDefault();options[next]?.focus({preventScroll:true});}else if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeYear();}else if(event.key==='Tab')closeYear();
   });
 
-  function syncQuarter(){
-    const q=getQuarterRange(year,quarter);
-    text('quarter-label',q.label);$('quarter').setAttribute('aria-label',w('选择季度','Select quarter')+' · '+q.label);$('quarter-menu').setAttribute('aria-label',w('季度','Quarter'));
-    for(const option of $('quarter-menu').children)option.setAttribute('aria-selected',String(option.dataset.quarter===String(quarter)));
-  }
-  function closeQuarter(restore=true){if(!$('quarter-menu').matches(':popover-open'))return;$('quarter-menu').hidePopover();$('quarter').setAttribute('aria-expanded','false');if(restore)$('quarter').focus({preventScroll:true});}
-  function positionQuarter(){
-    if(!$('quarter-menu').matches(':popover-open'))return;const menu=$('quarter-menu'),r=$('quarter').getBoundingClientRect(),bounds=dialog.getBoundingClientRect(),width=menu.offsetWidth,height=menu.offsetHeight;
-    menu.style.left=Math.max(bounds.left+12,Math.min(r.right-width,bounds.right-width-12))+'px';const below=r.bottom+7;
-    menu.style.top=(below+height<=bounds.bottom-12?below:Math.max(bounds.top+12,r.top-height-7))+'px';
-  }
-  function openQuarter(){
-    $('tip').hidden=true;closeYear(false);$('quarter-menu').showPopover();$('quarter').setAttribute('aria-expanded','true');positionQuarter();
-    ($('quarter-menu').querySelector('[aria-selected=true]')||$('quarter-menu').firstElementChild)?.focus({preventScroll:true});
-  }
-  function buildQuarterMenu(){
-    $('quarter-menu').replaceChildren();
-    const quarters=[
-      {q:1,label:zh()?'1-3月':'Jan-Mar'},
-      {q:2,label:zh()?'4-6月':'Apr-Jun'},
-      {q:3,label:zh()?'7-9月':'Jul-Sep'},
-      {q:4,label:zh()?'10-12月':'Oct-Dec'}
-    ];
-    for(const item of quarters){
-      const option=node('button','year-option');option.type='button';option.dataset.quarter=String(item.q);option.setAttribute('role','option');option.tabIndex=-1;
-      setMarkup(option,'<span></span><svg class="year-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8 3 3 7-7"/></svg>');
-      option.firstElementChild.textContent=item.label;
-      option.addEventListener('click',()=>{quarter=item.q;syncQuarter();closeQuarter();renderActivityMode();});
-      $('quarter-menu').append(option);
-    }
-  }
-  $('quarter').addEventListener('click',()=>{$('quarter-menu').matches(':popover-open')?closeQuarter():openQuarter();});
-  $('quarter').addEventListener('keydown',event=>{if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();openQuarter();if(event.key==='Home')$('quarter-menu').firstElementChild?.focus();if(event.key==='End')$('quarter-menu').lastElementChild?.focus();}});
-  $('quarter-menu').addEventListener('keydown',event=>{
-    const options=[...$('quarter-menu').children],current=options.indexOf(view.activeElement);let next=null;
-    if(event.key==='ArrowDown')next=Math.min(options.length-1,current+1);else if(event.key==='ArrowUp')next=Math.max(0,current-1);else if(event.key==='Home')next=0;else if(event.key==='End')next=options.length-1;
-    if(next!==null){event.preventDefault();options[next]?.focus({preventScroll:true});}else if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeQuarter();}else if(event.key==='Tab')closeQuarter();
-  });
-
   view.addEventListener('pointerdown',event=>{
     const path=event.composedPath();
     if(!path.includes($('year'))&&!path.includes($('year-menu')))closeYear(false);
-    if(!path.includes($('quarter'))&&!path.includes($('quarter-menu')))closeQuarter(false);
   });
-  page.addEventListener('scroll',closePickersOnScroll,{passive:true});function closePickersOnScroll(){closeYear(false);closeQuarter(false);}
-  window.addEventListener('resize',()=>{positionYear();positionQuarter();});
+  page.addEventListener('scroll',closeYearOnScroll,{passive:true});function closeYearOnScroll(){closeYear(false);}
+  window.addEventListener('resize',positionYear);
 
   for(const [id,step]of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{anchor=month(anchor,step);renderTrendSection();});
   $('locale').addEventListener('click',()=>void onLanguage(zh()?'en':'zh-CN'));
@@ -1133,7 +1113,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   function conceal(){
     if(dialog.matches(':popover-open'))dialog.hidePopover();dialog.removeAttribute('open');
   }
-  function close(){closeYear(false);closeQuarter(false);conceal();$('tip').hidden=true;opener?.focus({preventScroll:true});}
+  function close(){closeYear(false);conceal();$('tip').hidden=true;opener?.focus({preventScroll:true});}
   $('close').addEventListener('click',close);dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();}});
   const contentKey=data=>JSON.stringify([{...data,updatedAt:undefined},language.language,themeSignature()]);
   const within=event=>event.composedPath().includes(dialog);
@@ -1143,12 +1123,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     if(event.key==='Escape'){
       event.preventDefault();event.stopImmediatePropagation();
       if($('year-menu').matches(':popover-open'))closeYear();
-      else if($('quarter-menu').matches(':popover-open'))closeQuarter();
       else close();return;
     }
     if(event.key!=='Tab')return;
     if($('year-menu').matches(':popover-open'))closeYear(false);
-    if($('quarter-menu').matches(':popover-open'))closeQuarter(false);
     const controls=[...view.querySelectorAll('button,input,select,a[href],[tabindex]')].filter(n=>n.tabIndex>=0&&!n.disabled&&n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden');
     if(!controls.length){event.preventDefault();return;}
     const index=controls.indexOf(view.activeElement);
@@ -1171,9 +1149,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   if(root.host)themeObserver.observe(root.host,{attributes:true,attributeFilter:['data-pulse-theme','style']});
 
   return {
-    open(data,trigger){if(!data||disposed)return;accountKey=data.accountKey;value=data;opener=trigger;year||=data.today.slice(0,4);quarter||=Math.ceil(parseInt(data.today.slice(5,7),10)/3);anchor||=data.today;lastKey=contentKey(data);render();present();},
-    update(data){if(disposed)return;if(!data){if(!value)return;value=null;lastKey='';if(dialog.open)render();return;}if(accountKey&&accountKey!==data.accountKey){disabledModels.clear();year=data.today.slice(0,4);quarter=Math.ceil(parseInt(data.today.slice(5,7),10)/3);anchor=data.today;}accountKey=data.accountKey;value=data;if(!dialog.open)return;const key=contentKey(data);if(key===lastKey)return;lastKey=key;render();},
-    restoreModal(){if(!disposed&&dialog.open&&dialog.isConnected&&!dialog.matches(':popover-open')){closeYear(false);closeQuarter(false);present();}},
-    close,syncGuideDismissed(){},dispose(){disposed=true;themeObserver.disconnect();clearTimeout(refreshDelay);finishRefresh?.();refreshMotion?.cancel();closeYear(false);closeQuarter(false);window.removeEventListener('resize',positionYear);window.removeEventListener('resize',positionQuarter);document.removeEventListener('focusin',containFocus,true);document.removeEventListener('keydown',containKeys,true);document.removeEventListener('wheel',containScroll,true);document.removeEventListener('touchmove',containScroll,true);for(const type of ['pointerdown','mousedown','click'])document.removeEventListener(type,containPointer,true);conceal();dialog.remove();backdrop.remove();},get isOpen(){return dialog.open;}
+    open(data,trigger){if(!data||disposed)return;accountKey=data.accountKey;value=data;opener=trigger;year||=data.today.slice(0,4);anchor||=data.today;lastKey=contentKey(data);render();present();},
+    update(data){if(disposed)return;if(!data){if(!value)return;value=null;lastKey='';if(dialog.open)render();return;}if(accountKey&&accountKey!==data.accountKey){disabledModels.clear();year=data.today.slice(0,4);anchor=data.today;}accountKey=data.accountKey;value=data;if(!dialog.open)return;const key=contentKey(data);if(key===lastKey)return;lastKey=key;render();},
+    restoreModal(){if(!disposed&&dialog.open&&dialog.isConnected&&!dialog.matches(':popover-open')){closeYear(false);present();}},
+    close,syncGuideDismissed(){},dispose(){disposed=true;themeObserver.disconnect();clearTimeout(refreshDelay);finishRefresh?.();refreshMotion?.cancel();closeYear(false);window.removeEventListener('resize',positionYear);document.removeEventListener('focusin',containFocus,true);document.removeEventListener('keydown',containKeys,true);document.removeEventListener('wheel',containScroll,true);document.removeEventListener('touchmove',containScroll,true);for(const type of ['pointerdown','mousedown','click'])document.removeEventListener(type,containPointer,true);conceal();dialog.remove();backdrop.remove();},get isOpen(){return dialog.open;}
   };
 };
