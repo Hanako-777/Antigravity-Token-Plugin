@@ -35,7 +35,7 @@ const snapshot=async input=>{
   else{
     try{
       const server=await client.discover();
-      if(server.pid!==store.serverPid){store.epoch++;store.transcripts?.reset();store.identity=null;store.quota=null;store.quotaAt=0;store.sessions.clear();store.serverPid=server.pid;}
+      if(server.pid!==store.serverPid){store.epoch++;store.transcripts?.reset();store.identity=null;store.userStatus=null;store.quota=null;store.quotaAt=0;store.sessions.clear();store.serverPid=server.pid;}
       await store.refreshQuota(input.force);
       value={connection:'live',speed:null,groups:store.quota||[],quotaUpdatedAt:new Date(store.quotaAt).toISOString()};
     }catch{value={connection:'offline',speed:null,groups:[],error:'IDE local API unavailable'};}

@@ -11,6 +11,7 @@ export class MetricsStore {
   quotaAt = 0;
   quotaPending = null;
   identity = null;
+  userStatus = null;
   serverPid = null;
   summaries = [];
   summariesAt = 0;
@@ -41,6 +42,7 @@ export class MetricsStore {
       const identity = email ? createHash('sha256').update(email).digest('hex') : null;
       if (identity !== this.identity) { this.transcripts?.reset(); this.client.resetTrajectories?.(); this.quota = null; this.quotaAt = 0; this.sessions.clear(); this.summaries = []; this.summariesAt = 0; }
       this.identity = identity;
+      this.userStatus = user.userStatus || null;
       const response = await this.client.call('RetrieveUserQuotaSummary');
       if (epoch !== this.epoch || identity !== this.identity) throw new Error('后台已重新连接，请等待刷新');
       this.quota = quotaMetrics(response);
@@ -100,7 +102,7 @@ export class MetricsStore {
     try {
       const server = await this.client.discover();
       if (server.pid !== this.serverPid) {
-        this.epoch++; this.transcripts?.reset(); this.quota = null; this.quotaAt = 0; this.sessions.clear(); this.identity = null; this.summaries = []; this.summariesAt = 0; this.serverPid = server.pid;
+        this.epoch++; this.transcripts?.reset(); this.quota = null; this.quotaAt = 0; this.sessions.clear(); this.identity = null; this.userStatus = null; this.summaries = []; this.summariesAt = 0; this.serverPid = server.pid;
       }
       try { await this.refreshQuota(force); }
       catch (e) { connection = this.quota ? 'stale' : 'offline'; error = e.message; }

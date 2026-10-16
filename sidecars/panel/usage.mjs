@@ -2,7 +2,7 @@
 import {readFile,writeFile,mkdir,rename,readdir,unlink} from 'node:fs/promises';
 import {readFileSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
-import {homedir} from 'node:os';
+import {homedir,userInfo} from 'node:os';
 import {createHash,randomUUID} from 'node:crypto';
 import {tokenCount,requestCacheMetrics} from './metrics.mjs';
 import {platformPaths} from '../../compat/platform.mjs';
@@ -15,7 +15,15 @@ const cleanModel=value=>String(value||'Unknown').replace(/[\x00-\x1f\x7f]/g,'').
 const stamp=value=>typeof value==='string'&&/^20\d\d-\d\d-\d\dT/.test(value)&&Number.isFinite(Date.parse(value))?Date.parse(value):null;
 const sum=r=>keys.reduce((n,k)=>n+(r[k]??0),0);
 
-function getUserProfile(){
+export function getUserProfile(store){
+  if(store?.userStatus){
+    const u=store.userStatus;
+    const name=u.name||(u.email?u.email.split('@')[0]:'');
+    const email=u.email||'';
+    const avatar=u.profilePictureUrl||u.pictureUrl||u.picture||'';
+    const initial=name?name[0].toUpperCase():'U';
+    if(name||email)return {name:name||'User',email,avatar,initial};
+  }
   try{
     const credsPath=join(homedir(),'.gemini','oauth_creds.json');
     if(existsSync(credsPath)){
@@ -29,6 +37,10 @@ function getUserProfile(){
         return {name,email,avatar,initial};
       }
     }
+  }catch{}
+  try{
+    const u=userInfo()?.username;
+    if(u)return {name:u,email:'',avatar:'',initial:u[0].toUpperCase()};
   }catch{}
   return {name:'Antigravity User',email:'',avatar:'',initial:'A'};
 }
@@ -233,7 +245,7 @@ export class DesktopUsage{
     if(this.scope!==this.store.identity||this.scopeEpoch!==this.store.epoch){this.lastSync=0;this.status='waiting';this.missingConversations=0;this.confirmedMissingConversations=0;this.retryingConversations=0;if(this.pending)this.forceQueued=true;}
     if(this.now()-this.lastSync>60000&&!this.continuation)void this.sync();
     const scope=this.store.identity,value=await this.ledger.summary(scope);
-    return scope===this.store.identity?{...value,syncing:this.syncing||!!this.continuation,status:this.status,missingConversations:this.missingConversations,confirmedMissingConversations:this.confirmedMissingConversations,retryingConversations:this.retryingConversations,persistenceError:this.store.usagePersistenceError===true}:null;
+    return scope===this.store.identity?{...value,syncing:this.syncing||!!this.continuation,status:this.status,missingConversations:this.missingConversations,confirmedMissingConversations:this.confirmedMissingConversations,retryingConversations:this.retryingConversations,persistenceError:this.store.usagePersistenceError===true,profile:getUserProfile(this.store)}:null;
   }
   dispose(){this.disposed=true;this.forceQueued=false;clearTimeout(this.continuation);this.continuation=null;}
 }
