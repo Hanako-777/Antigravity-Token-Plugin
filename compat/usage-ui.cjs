@@ -7,7 +7,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   const css=document.createElement('style');css.textContent=`
     :host{display:block;height:100%;color:var(--pulse-foreground);font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif;font-variant-numeric:tabular-nums}
     *{box-sizing:border-box}button,select{font:inherit;color:inherit}button{cursor:pointer}button,select{border:1px solid var(--pulse-border);background:transparent;border-radius:7px}button{transition:background 140ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}button:active{transform:scale(.97)}button:focus-visible,select:focus-visible{outline:2px solid var(--pulse-accent);outline-offset:3px}button[disabled]{opacity:.35;cursor:default}
-    .page{height:100%;max-height:none;overflow-y:auto;overflow-x:hidden;padding:22px 28px 28px;display:flex;flex-direction:column;gap:18px;background:var(--pulse-background);scrollbar-gutter:stable}
+    .page{height:100%;max-height:none;overflow-y:auto;overflow-x:hidden;padding:22px 28px 30px;display:flex;flex-direction:column;gap:18px;background:var(--pulse-background);scrollbar-gutter:stable}
     
     /* Top Header Navbar */
     .top{display:flex;justify-content:space-between;align-items:center}
@@ -23,17 +23,18 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     
     /* User Profile Hero (Centered at Top) */
     .profile-hero{display:flex;flex-direction:column;align-items:center;text-align:center;margin:4px 0 10px}
-    .avatar-wrap{position:relative;width:66px;height:66px;margin-bottom:8px}
-    .avatar-img{width:66px;height:66px;border-radius:50%;object-fit:cover;border:2px solid var(--pulse-border);box-shadow:0 4px 14px rgba(0,0,0,0.12);display:block}
-    .avatar-fallback{width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,var(--pulse-accent),#ec4899);color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;border:2px solid var(--pulse-border)}
+    .avatar-wrap{position:relative;width:78px;height:78px;margin-bottom:8px}
+    .avatar-img{width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid var(--pulse-border);box-shadow:0 4px 14px rgba(0,0,0,0.14);display:block}
+    .avatar-fallback{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,var(--pulse-accent),#ec4899);color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:600;border:2px solid var(--pulse-border)}
     .profile-name{font-size:18px;font-weight:650;color:var(--pulse-foreground);line-height:1.25;letter-spacing:-.2px}
-    .profile-email{font-size:12px;color:var(--pulse-muted);margin-top:2px}
+    .profile-handle{font-size:12.5px;color:var(--pulse-muted);margin-top:3px;cursor:help;transition:color 0.15s ease}
+    .profile-handle:hover{color:var(--pulse-accent)}
     
     /* Codex 5-Metrics Hero Bar */
     .codex-bar{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr 1.25fr 0.9fr 1fr;box-shadow:0 4px 16px var(--pulse-shadow);margin-bottom:2px}
     .codex-col{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2px 6px;min-width:0}
     .codex-col:not(:last-child){border-right:1px solid var(--pulse-separator)}
-    .codex-num{font-size:17px;font-weight:600;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .codex-num{font-size:17.5px;font-weight:600;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap}
     .codex-label{font-size:10.5px;color:var(--pulse-muted);margin-top:3px;white-space:nowrap}
     .codex-sub{font-size:9.5px;opacity:0.75;margin-left:3px}
     
@@ -77,7 +78,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .heat button{border:0;border-radius:3px;padding:0;min-width:0;aspect-ratio:1;background:var(--pulse-hover);outline-offset:1px;cursor:pointer;transition:transform 0.1s ease;animation:cellPop 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards}
     @keyframes cellPop{0%{transform:scale(0.15);opacity:0}100%{transform:scale(1);opacity:1}}
     @media(prefers-reduced-motion:reduce){.heat button{animation:none}}
-    .heat button:hover{transform:scale(1.22);z-index:2}
+    .heat button:hover{transform:scale(1.25);z-index:2}
     .heat button[data-level="1"],.swatch[data-level="1"]{background:color-mix(in srgb,var(--pulse-accent) 22%,var(--pulse-hover))}
     .heat button[data-level="2"],.swatch[data-level="2"]{background:color-mix(in srgb,var(--pulse-accent) 45%,var(--pulse-hover))}
     .heat button[data-level="3"],.swatch[data-level="3"]{background:color-mix(in srgb,var(--pulse-accent) 68%,var(--pulse-hover))}
@@ -128,15 +129,34 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .range strong{font-size:12px;font-weight:500;min-width:106px;text-align:center}
     .chart-summary{font-size:11px;color:var(--pulse-muted);margin-top:2px}
     .chart-summary strong{color:var(--pulse-foreground);font-weight:600}
+    .date-filter-badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:var(--pulse-hover);border:1px solid var(--pulse-border);border-radius:6px;font-size:11px;color:var(--pulse-accent);margin-left:8px}
+    .date-filter-badge button{border:0;background:transparent;padding:0 2px;color:var(--pulse-muted);font-size:12px;cursor:pointer}
+    .date-filter-badge button:hover{color:var(--pulse-foreground)}
     
-    /* Table */
-    .table-wrap{overflow:auto;margin-top:4px}
+    /* 6-Grid Stats in Token 消费统计 */
+    .stats-6-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+    @media(max-width:700px){.stats-6-grid{grid-template-columns:repeat(2,1fr)}}
+    .stat-card-box{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:12px;padding:14px;box-shadow:0 4px 14px var(--pulse-shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .stat-card-head{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--pulse-muted);margin-bottom:5px}
+    .stat-card-head svg{width:14px;height:14px;fill:none;stroke:var(--pulse-accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    .stat-card-num{font-size:19px;font-weight:600;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums}
+    .stat-card-sub{font-size:10.5px;color:var(--pulse-muted);margin-top:2px}
+    
+    /* Daily Audit Table & Pagination */
+    .table-wrap{overflow:auto}
     .table{width:100%;border-collapse:collapse;text-align:right;font-size:11px;white-space:nowrap}
-    .table th{font-weight:500;color:var(--pulse-muted);padding:8px 12px;border-bottom:1px solid var(--pulse-separator)}
-    .table td{padding:11px 12px;border-bottom:1px solid var(--pulse-separator)}
-    .table th:first-child,.table td:first-child{text-align:left;padding-left:0}
-    .table td:first-child span{margin-right:7px}
+    .table th{font-weight:500;color:var(--pulse-muted);padding:9px 14px;border-bottom:1px solid var(--pulse-separator);background:var(--pulse-hover)}
+    .table td{padding:10px 14px;border-bottom:1px solid var(--pulse-separator)}
+    .table th:first-child,.table td:first-child{text-align:left}
     .table tr:last-child td{border-bottom:0}
+    .pagination-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--pulse-separator);background:var(--pulse-hover);font-size:11px}
+    .pagination-btns{display:flex;align-items:center;gap:6px}
+    .page-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--pulse-border);background:var(--pulse-control);color:var(--pulse-foreground);font-size:11px;cursor:pointer;transition:all 0.14s ease}
+    .page-btn:hover:not(:disabled){background:var(--pulse-hover)}
+    .page-btn:disabled{opacity:0.35;cursor:not-allowed}
+    .page-numbers{display:flex;align-items:center;gap:4px}
+    .page-num{min-width:24px;height:24px;display:grid;place-items:center;border-radius:5px;border:1px solid transparent;background:transparent;color:var(--pulse-muted);font-size:11px;cursor:pointer}
+    .page-num.active{background:var(--pulse-control);color:var(--pulse-foreground);font-weight:600;border-color:var(--pulse-border)}
     
     .footer{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px;padding-top:12px;font-size:10px;color:var(--pulse-muted)}
     .alert{color:var(--pulse-warning);margin-top:6px;font-size:11px}
@@ -188,25 +208,25 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       </div>
     </header>
 
-    <!-- User Profile Hero (Centered) -->
+    <!-- User Profile Hero (Larger avatar, masked handle with full email on hover) -->
     <div class="profile-hero">
       <div class="avatar-wrap">
         <img id="profile-avatar" class="avatar-img" src="" alt="Avatar" style="display:none;" />
         <div id="profile-fallback" class="avatar-fallback">A</div>
       </div>
       <div class="profile-name" id="profile-name">Antigravity User</div>
-      <div class="profile-email" id="profile-email"></div>
+      <div class="profile-handle" id="profile-handle" title="">@user</div>
     </div>
 
-    <!-- Codex 5-Metrics Hero Bar (Today Tokens placed BEFORE Total Tokens) -->
+    <!-- Codex 5-Metrics Hero Bar (Original Order & Types) -->
     <section class="codex-bar">
-      <div class="codex-col">
-        <div class="codex-num" id="codex-today">—</div>
-        <div class="codex-label" id="codex-today-label">今日实际消耗</div>
-      </div>
       <div class="codex-col">
         <div class="codex-num" id="codex-total">—</div>
         <div class="codex-label" id="codex-total-label">累计 Token 数</div>
+      </div>
+      <div class="codex-col">
+        <div class="codex-num" id="codex-today">—</div>
+        <div class="codex-label" id="codex-today-label">今日实际消耗</div>
       </div>
       <div class="codex-col">
         <div class="codex-num" id="codex-peak">—</div>
@@ -224,7 +244,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
     <section id="usage-waiting" class="usage-waiting" role="status" hidden></section>
 
-    <!-- Section 1: Token 活动 (Wrapped in Card Container with Icon) -->
+    <!-- Section 1: Token 活动 (Card Container with Icon) -->
     <section class="card-container" id="section-activity">
       <div class="section-header">
         <div class="section-title">
@@ -289,26 +309,28 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       </div>
     </section>
 
-    <!-- Section 2: 按模型统计 (Wrapped in Card Container with Icon) -->
-    <section class="card-container" id="section-details">
+    <!-- Section 2: Token 使用趋势 (Trend & Model Breakdown Chart) -->
+    <section class="card-container" id="section-trend">
       <div class="section-header">
-        <div>
+        <div style="display:flex;align-items:center;">
           <div class="section-title">
             <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-            <span id="detail-title">按模型统计</span>
+            <span id="trend-title">Token 使用趋势</span>
           </div>
-          <div class="chart-summary" id="chart-summary"></div>
+          <div id="trend-date-badge" class="date-filter-badge" hidden>
+            <span id="trend-date-text"></span>
+            <button type="button" id="trend-date-clear" title="清除筛选 / 查看整月">×</button>
+          </div>
         </div>
         <div class="chart-controls">
-          <div class="range">
+          <div class="range" id="trend-range">
             <button id="previous" aria-label="Previous">‹</button>
             <strong id="range-label"></strong>
             <button id="next" aria-label="Next">›</button>
           </div>
-          <div class="seg-control" id="period-controls">
-            <button type="button" class="seg-btn active" data-period="day">天</button>
-            <button type="button" class="seg-btn" data-period="week">周</button>
-            <button type="button" class="seg-btn" data-period="month">月</button>
+          <div class="seg-control" id="trend-controls">
+            <button type="button" class="seg-btn active" data-trend="daily">日走势</button>
+            <button type="button" class="seg-btn" data-trend="model">模型统计</button>
           </div>
         </div>
       </div>
@@ -317,16 +339,84 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
       <div class="chart-wrap">
         <div class="chart">
-          <div class="axis" id="axis"></div>
-          <div class="plot" id="plot"></div>
+          <div class="axis" id="trend-axis"></div>
+          <div class="plot" id="trend-plot"></div>
         </div>
       </div>
+    </section>
 
-      <div class="table-wrap">
+    <!-- Section 3: Token 消费统计 (6-Grid Stats) -->
+    <div class="section-header" style="margin-top:6px; margin-bottom:10px;">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>Token 消费统计</span>
+      </div>
+    </div>
+    <section class="stats-6-grid">
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><span>总 Token 消费</span></div>
+        <div class="stat-card-num" id="stat-total">—</div>
+        <div class="stat-card-sub">历史有效计费总量</div>
+      </div>
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg><span>输入 Token (Prompt)</span></div>
+        <div class="stat-card-num" id="stat-input">—</div>
+        <div class="stat-card-sub">未缓存提示词输入</div>
+      </div>
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg><span>输出 Token (Gen)</span></div>
+        <div class="stat-card-num" id="stat-output">—</div>
+        <div class="stat-card-sub">思考推理与回答生成</div>
+      </div>
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg><span>缓存读取 (Cache)</span></div>
+        <div class="stat-card-num" id="stat-cache">—</div>
+        <div class="stat-card-sub" id="stat-cache-sub">Tokens 命中</div>
+      </div>
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>总会话轮次 (Turns)</span></div>
+        <div class="stat-card-num" id="stat-turns">—</div>
+        <div class="stat-card-sub">多会话累计执行</div>
+      </div>
+      <div class="stat-card-box">
+        <div class="stat-card-head"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span>今日实时消耗</span></div>
+        <div class="stat-card-num" id="stat-today">—</div>
+        <div class="stat-card-sub" id="stat-today-sub">当日会话实时消耗</div>
+      </div>
+    </section>
+
+    <!-- Section 4: 每日消费审计明细 (Table with 10-day Pagination) -->
+    <section class="card-container" id="section-audit" style="padding:0; overflow:hidden;">
+      <div style="padding: 13px 18px; border-bottom: 1px solid var(--pulse-separator); display:flex; justify-content:space-between; align-items:center;">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>每日消费审计明细</span>
+        </div>
+        <span class="muted" id="audit-count" style="font-size:11.5px;">共 0 天记录</span>
+      </div>
+      <div class="table-wrap" style="padding:0; margin:0;">
         <table class="table">
-          <thead><tr id="table-head"></tr></thead>
-          <tbody id="table-body"></tbody>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>交互轮次</th>
+              <th style="text-align:right;">未缓存输入</th>
+              <th style="text-align:right;">模型输出</th>
+              <th style="text-align:right;">缓存读取</th>
+              <th style="text-align:right;">当日总计 (Tokens)</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body"></tbody>
         </table>
+      </div>
+      <!-- Pagination Controls (10 days per page) -->
+      <div class="pagination-bar" id="audit-pagination">
+        <span class="muted" id="pagination-info">第 1 / 1 页</span>
+        <div class="pagination-btns">
+          <button type="button" class="page-btn" id="page-prev">‹ 上一页</button>
+          <div id="page-numbers" class="page-numbers"></div>
+          <button type="button" class="page-btn" id="page-next">下一页 ›</button>
+        </div>
       </div>
     </section>
 
@@ -340,8 +430,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   view.append(page);
 
   const $=id=>view.getElementById(id),text=(id,value)=>{if($(id)&&$(id).textContent!==value)$(id).textContent=value;};
-  let value=null,heatMode='day',period='day',year=null,anchor=null,disabledModels=new Set(),lastKey='',busy=false,opener=null;
+  let value=null,heatMode='day',trendMode='daily',year=null,anchor=null,selectedDate=null,disabledModels=new Set(),lastKey='',busy=false,opener=null;
   let disposed=false,refreshMotion=null,refreshDelay=null,finishRefresh=null,accountKey=null,tipTarget=null,tipModel=null;
+  let auditPage=1;const auditPageSize=10;
   const zh=()=>language.language==='zh-CN',w=(cn,en)=>zh()?cn:en;
 
   const full=n=>Number(n||0).toLocaleString(zh()?'zh-CN':'en-US');
@@ -419,11 +510,17 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     const tip=$('tip');
     tip.className='tip'+(isLightTheme()?' light':'');
     const dateStr=bucket.from===bucket.to?bucket.from:bucket.from+' – '+bucket.to;
-    let html=`<div class="tip-date">${dateStr}</div>`;
+    let html=`<div class="tip-date">${bucket.modelTitle?bucket.modelTitle:dateStr}</div>`;
     if(bucket.isCumulative){
       html+=`<div class="tip-total"><span>${zh()?'累计消耗:':'Cumulative:'}</span><span class="tip-num">${full(bucket.total)} Token</span></div>`;
       html+=`<div class="tip-row" style="color:var(--pulse-accent);font-weight:600;"><span>${zh()?'当日消耗:':'Day added:'}</span><span class="tip-num">+${compact(bucket.dayAdded||0)} Token</span></div>`;
       html+=`<div class="tip-turns"><span>${zh()?'累计交互:':'Total requests:'}</span><span class="tip-num">${full(bucket.requests)} ${zh()?'次':'requests'}</span></div>`;
+    }else if(bucket.isSingleModel){
+      html+=`<div class="tip-total"><span>${zh()?'模型消耗:':'Model tokens:'}</span><span class="tip-num">${full(bucket.total)} Token</span></div>`;
+      html+=`<div class="tip-row"><span>${zh()?'未缓存输入:':'Uncached input:'}</span><span class="tip-num">${compact(bucket.uncached||0)}</span></div>`;
+      html+=`<div class="tip-row"><span>${zh()?'缓存读取:':'Cache read:'}</span><span class="tip-num">${compact(bucket.cacheRead||0)}</span></div>`;
+      html+=`<div class="tip-row"><span>${zh()?'模型输出:':'Output:'}</span><span class="tip-num">${compact(bucket.output||0)}</span></div>`;
+      html+=`<div class="tip-turns"><span>${zh()?'交互轮次:':'Requests:'}</span><span class="tip-num">${full(bucket.requests||0)} ${zh()?'次请求':'requests'}</span></div>`;
     }else if(bucket.total>0){
       html+=`<div class="tip-total"><span>${zh()?'总消耗:':'Total:'}</span><span class="tip-num">${full(bucket.total)} Token</span></div>`;
       const modelEntries=Object.entries(bucket.models||{}).filter(([m,r])=>r.total>0).sort((a,b)=>b[1].total-a[1].total);
@@ -456,10 +553,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     });
     button.addEventListener('focus',e=>tooltip(bucket,button,null,e));
     button.addEventListener('blur',()=>{$('tip').hidden=true;tipTarget=null;tipModel=null;highlightModel(null);});
-    button.addEventListener('click',()=>{anchor=bucket.from;renderChart();});
   };
 
-  /* Render 1: Daily Heatmap Grid (Diagonal Staggered Ripple Animation) */
+  /* Render 1: Daily Heatmap Grid (Diagonal Ripple Transition & Cell Click to Model Jump) */
   function renderHeat(){
     if(!value)return;
     const start=week(year+'-01-01'),end=year+'-12-31',weeks=Math.floor((Date.parse(end)-Date.parse(start))/604800000)+1;
@@ -481,7 +577,17 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       const col=Math.floor(i/7),row=i%7;
       button.style.animationDelay=((col+row)*8)+'ms';
       
-      if(!future)bindBucket(button,bucket);
+      if(!future){
+        bindBucket(button,bucket);
+        // Cell Click: jump to Trend Section in Model mode and show that day's result!
+        button.addEventListener('click',()=>{
+          selectedDate=bucket.from;
+          trendMode='model';
+          for(const btn of view.querySelectorAll('#trend-controls button'))btn.classList.toggle('active',btn.dataset.trend==='model');
+          renderTrendSection();
+          $('section-trend')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+        });
+      }
       button.tabIndex=-1;
       $('heat').append(button);
     }
@@ -498,7 +604,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     text('heat-summary',w(`${year} 年 · ${full(annual.total)} Token`,`${year} · ${full(annual.total)} tokens`));
   }
 
-  /* Render 2: Weekly Stacked Bar Chart (Uniform dimensions, wide-scroll plot) */
+  /* Render 2: Weekly Stacked Bar Chart */
   function renderWeeklyActivity(){
     if(!value)return;syncPalette();
     const start=week(year+'-01-01'),end=year+'-12-31',weeks=Math.floor((Date.parse(end)-Date.parse(start))/604800000)+1;
@@ -588,7 +694,6 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     const lineEl=svgWrap.querySelector('#total-cursor-line'),dotEl=svgWrap.querySelector('#total-cursor-dot');
     plot.append(svgWrap);
     
-    // Pointermove tracking on SVG
     plot.addEventListener('pointermove',e=>{
       const rect=plot.getBoundingClientRect();
       const relX=(e.clientX-rect.left)/rect.width;
@@ -608,10 +713,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
   function highlightModel(model){
     if(model){
-      $('plot').dataset.highlight=model;
+      $('trend-plot').dataset.highlight=model;
       if($('week-plot'))$('week-plot').dataset.highlight=model;
     }else{
-      delete $('plot').dataset.highlight;
+      delete $('trend-plot').dataset.highlight;
       if($('week-plot'))delete $('week-plot').dataset.highlight;
     }
     for(const bar of view.querySelectorAll('.bar-segment')){
@@ -619,64 +724,217 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     }
   }
 
-  /* Render Lower Model Breakdown Chart & Table */
-  function renderChart(){
+  /* Render Section 2: Token 使用趋势 (Daily Trend or Model Breakdown with X-axis as Models) */
+  function renderTrendSection(){
     if(!value)return;syncPalette();$('tip').hidden=true;highlightModel(null);
-    const buckets=[];
-    if(period==='day'){const start=month(anchor,0),end=add(month(anchor,1),-1);for(let date=start;date<=end;date=add(date,1))buckets.push(totals(date,date,true));text('range-label',start.slice(0,7));}
-    else if(period==='week'){const start=add(week(anchor),-11*7);for(let i=0;i<12;i++){const from=add(start,i*7);buckets.push(totals(from,add(from,6),true));}text('range-label',start.slice(5)+' – '+add(week(anchor),6).slice(5));}
-    else{for(let i=-11;i<=0;i++){const from=month(anchor,i);buckets.push(totals(from,add(month(from,1),-1),true));}text('range-label',buckets[0].from.slice(0,7)+' – '+month(anchor,0).slice(0,7));}
-    $('next').disabled=period==='week'?week(anchor)>=week(value.today):anchor.slice(0,7)>=value.today.slice(0,7);
-    $('legend').replaceChildren();
-    for(const model of value.models){
-      const button=node('button',''),dot=node('i','dot');
-      dot.style.setProperty('--model-color',color(model));
-      button.append(dot,document.createTextNode(modelName(model)));
-      button.type='button';button.setAttribute('aria-pressed',String(!disabledModels.has(model)));
-      button.addEventListener('click',()=>{if(disabledModels.has(model))disabledModels.delete(model);else disabledModels.add(model);renderChart();if(heatMode==='week')renderWeeklyActivity();});
-      button.addEventListener('pointerenter',()=>highlightModel(disabledModels.has(model)?null:model));
-      button.addEventListener('pointerleave',()=>highlightModel(null));
-      $('legend').append(button);
-    }
-    const max=Math.max(1,...buckets.map(b=>b.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
-    $('axis').replaceChildren();$('plot').replaceChildren();
-    for(let i=0;i<=4;i++){
-      const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';$('axis').append(label);
-      const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';$('plot').append(line);
-    }
-    for(const [i,bucket]of buckets.entries()){
-      const button=node('button','bar-column');button.type='button';
-      const stack=node('div','stack');
-      stack.style.animationDelay=(i*14)+'ms';
-      const segments=value.models.filter(m=>bucket.models[m]?.total>0);
-      for(const [j,model]of segments.entries()){
-        const r=bucket.models[model],bar=node('i','bar-segment'),height=r.total/ceiling*227;
-        bar.dataset.model=model;bar.setAttribute('aria-hidden','true');bar.style.setProperty('--model-color',color(model));bar.style.height=height+'px';
-        if(j&&height>=3)bar.style.boxShadow='inset 0 -1px 0 color-mix(in srgb,var(--pulse-background) 48%,transparent)';
-        stack.append(bar);
+    const plot=$('trend-plot'),axis=$('trend-axis');
+    axis.replaceChildren();plot.replaceChildren();
+
+    if(trendMode==='daily'){
+      $('trend-range').style.display='flex';
+      $('legend').style.display='flex';
+      $('trend-date-badge').hidden=true;
+      text('trend-title',w('Token 使用趋势 · 日走势','Token Usage Trend · Daily'));
+      
+      const start=month(anchor,0),end=add(month(anchor,1),-1);
+      const buckets=[];
+      for(let date=start;date<=end;date=add(date,1))buckets.push(totals(date,date,true));
+      text('range-label',start.slice(0,7));
+      $('next').disabled=anchor.slice(0,7)>=value.today.slice(0,7);
+      
+      $('legend').replaceChildren();
+      for(const model of value.models){
+        const button=node('button',''),dot=node('i','dot');
+        dot.style.setProperty('--model-color',color(model));
+        button.append(dot,document.createTextNode(modelName(model)));
+        button.type='button';button.setAttribute('aria-pressed',String(!disabledModels.has(model)));
+        button.addEventListener('click',()=>{if(disabledModels.has(model))disabledModels.delete(model);else disabledModels.add(model);renderTrendSection();});
+        button.addEventListener('pointerenter',()=>highlightModel(disabledModels.has(model)?null:model));
+        button.addEventListener('pointerleave',()=>highlightModel(null));
+        $('legend').append(button);
       }
-      if(!bucket.total)stack.append(node('i','empty-bar'));
-      button.append(stack);
-      if(period!=='day'||i%3===0||i===buckets.length-1)button.append(node('span','x-label',period==='day'?String(i+1):period==='week'?bucket.from.slice(5):bucket.from.slice(0,7)));
-      bindBucket(button,bucket);$('plot').append(button);
+      
+      const max=Math.max(1,...buckets.map(b=>b.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
+      for(let i=0;i<=4;i++){
+        const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';axis.append(label);
+        const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';plot.append(line);
+      }
+      for(const [i,bucket]of buckets.entries()){
+        const button=node('button','bar-column');button.type='button';
+        const stack=node('div','stack');
+        stack.style.animationDelay=(i*12)+'ms';
+        const segments=value.models.filter(m=>bucket.models[m]?.total>0);
+        for(const [j,model]of segments.entries()){
+          const r=bucket.models[model],bar=node('i','bar-segment'),height=r.total/ceiling*227;
+          bar.dataset.model=model;bar.setAttribute('aria-hidden','true');bar.style.setProperty('--model-color',color(model));bar.style.height=height+'px';
+          if(j&&height>=3)bar.style.boxShadow='inset 0 -1px 0 color-mix(in srgb,var(--pulse-background) 48%,transparent)';
+          stack.append(bar);
+        }
+        if(!bucket.total)stack.append(node('i','empty-bar'));
+        button.append(stack);
+        if(i%3===0||i===buckets.length-1)button.append(node('span','x-label',String(i+1)));
+        bindBucket(button,bucket);
+        plot.append(button);
+      }
+      if(!buckets.some(b=>b.total))plot.append(node('div','chart-empty',w('所选月份暂无用量记录','No usage recorded in this month')));
+    }else{
+      // Model Statistics Mode: X-Axis represents different models!
+      $('trend-range').style.display='none';
+      $('legend').style.display='none';
+      text('trend-title',w('Token 使用趋势 · 模型统计','Token Usage Trend · Model Statistics'));
+      
+      let targetDays=[];
+      if(selectedDate){
+        $('trend-date-badge').hidden=false;
+        text('trend-date-text',`📅 ${selectedDate} ${zh()?'当天分布':'Day'}`);
+        targetDays=(value.days||[]).filter(d=>d.date===selectedDate);
+      }else{
+        $('trend-date-badge').hidden=true;
+        const start=month(anchor,0),end=add(month(anchor,1),-1);
+        targetDays=(value.days||[]).filter(d=>d.date>=start&&d.date<=end);
+      }
+      
+      const modelStats=new Map();
+      for(const m of value.models)modelStats.set(m,{total:0,uncached:0,cacheRead:0,cacheWrite:0,output:0,requests:0});
+      for(const day of targetDays){
+        for(const [m,r]of Object.entries(day.models||{})){
+          if(!modelStats.has(m))modelStats.set(m,{total:0,uncached:0,cacheRead:0,cacheWrite:0,output:0,requests:0});
+          const st=modelStats.get(m);
+          st.total+=r.total||0;st.uncached+=r.uncached||0;st.cacheRead+=r.cacheRead||0;st.cacheWrite+=r.cacheWrite||0;st.output+=r.output||0;st.requests+=r.requests||0;
+        }
+      }
+      
+      const activeModels=[...modelStats.entries()].filter(([,st])=>st.total>0);
+      if(!activeModels.length){
+        plot.append(node('div','chart-empty',selectedDate?w(selectedDate+' 暂无模型消耗','No model usage on '+selectedDate):w('所选时段暂无模型用量记录','No model usage in this period')));
+        return;
+      }
+      
+      const max=Math.max(1,...activeModels.map(([,st])=>st.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
+      for(let i=0;i<=4;i++){
+        const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';axis.append(label);
+        const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';plot.append(line);
+      }
+      
+      for(const [i,[model,st]]of activeModels.entries()){
+        const button=node('button','bar-column');button.type='button';
+        const stack=node('div','stack');
+        stack.style.animationDelay=(i*20)+'ms';
+        stack.style.width='36px';stack.style.maxWidth='42px';
+        
+        // Segments breakdown by token components: Uncached Input, Cache Read, Output
+        const components=[
+          {key:'uncached',label:w('未缓存输入','Uncached'),val:st.uncached,clr:'var(--pulse-accent)'},
+          {key:'cacheRead',label:w('缓存读取','Cache read'),val:st.cacheRead,clr:'var(--pulse-success)'},
+          {key:'output',label:w('模型输出','Output'),val:st.output,clr:'#f472b6'}
+        ];
+        for(const comp of components){
+          if(!comp.val)continue;
+          const bar=node('i','bar-segment'),h=comp.val/ceiling*227;
+          bar.style.height=h+'px';
+          bar.style.setProperty('--model-color',comp.clr);
+          stack.append(bar);
+        }
+        button.append(stack);
+        button.append(node('span','x-label',modelName(model)));
+        
+        const singleBucket={
+          from:selectedDate||anchor.slice(0,7),to:selectedDate||anchor.slice(0,7),
+          modelTitle:modelName(model),total:st.total,uncached:st.uncached,cacheRead:st.cacheRead,output:st.output,requests:st.requests,isSingleModel:true
+        };
+        button.addEventListener('pointerenter',e=>tooltip(singleBucket,button,null,e));
+        button.addEventListener('pointerleave',()=>{$('tip').hidden=true;tipTarget=null;});
+        button.addEventListener('pointermove',e=>tooltip(singleBucket,button,null,e));
+        plot.append(button);
+      }
     }
-    if(!buckets.some(b=>b.total))$('plot').append(node('div','chart-empty',w('所选时段暂无用量记录','No usage recorded in this period')));
-    $('table-head').replaceChildren(...[w('模型','Model'),w('总 Token','Total tokens'),w('未缓存输入','Uncached input'),w('缓存读取','Cache read'),w('缓存写入','Cache write'),w('输出','Output')].map(label=>node('th','',label)));
-    $('table-body').replaceChildren();
-    const rangeTotals=totals(buckets[0].from,buckets.at(-1).to,true);
-    $('chart-summary').replaceChildren(node('strong','',compact(rangeTotals.total)+' Token'),document.createTextNode(' · '+w(`${full(rangeTotals.requests)} 次请求`,`${full(rangeTotals.requests)} requests`)));
-    for(const [model,r]of Object.entries(rangeTotals.models).sort((a,b)=>b[1].total-a[1].total)){
-      const row=node('tr',''),label=node('td',''),dot=node('span','dot');dot.style.setProperty('--model-color',color(model));
-      label.append(dot,document.createTextNode(modelName(model)));row.append(label,...[r.total,r.uncached,r.cacheRead,r.cacheWrite,r.output].map(n=>node('td','',full(n))));
-      $('table-body').append(row);
-    }
-    for(const b of view.querySelectorAll('[data-period]'))b.classList.toggle('active',b.dataset.period===period);
   }
+
+  /* Render Section 3: 6-Grid Stats in Token 消费统计 */
+  function renderStats6Grid(){
+    if(!value)return;
+    let totalUncached=0,totalOutput=0,totalCache=0;
+    for(const d of value.days||[]){
+      for(const r of Object.values(d.models||{})){
+        totalUncached+=r.uncached||0;
+        totalOutput+=r.output||0;
+        totalCache+=r.cacheRead||0;
+      }
+    }
+    text('stat-total',full(value.totalTokens||0));
+    text('stat-input',full(totalUncached));
+    text('stat-output',full(totalOutput));
+    text('stat-cache',compact(totalCache));
+    text('stat-cache-sub',`${full(totalCache)} ${w('Tokens 命中','Tokens hit')}`);
+    text('stat-turns',`${full(value.requests||0)} ${w('轮','turns')}`);
+    text('stat-today',compact(value.todayTokens||0));
+    text('stat-today-sub',`${full(value.todayTokens||0)} ${w('Tokens 当日消耗','Tokens today')}`);
+  }
+
+  /* Render Section 4: Daily Audit Table with 10-day Pagination */
+  function renderAuditTable(){
+    if(!value)return;
+    const allDays=(value.days||[])
+      .map(d=>{
+        const models=Object.values(d.models||{});
+        const total=models.reduce((s,m)=>s+(m.total||0),0);
+        const uncached=models.reduce((s,m)=>s+(m.uncached||0),0);
+        const output=models.reduce((s,m)=>s+(m.output||0),0);
+        const cacheRead=models.reduce((s,m)=>s+(m.cacheRead||0),0);
+        const turns=models.reduce((s,m)=>s+(m.requests||0),0);
+        return {date:d.date,total,uncached,output,cacheRead,turns};
+      })
+      .filter(d=>d.total>0||d.turns>0)
+      .sort((a,b)=>b.date.localeCompare(a.date)); // Newest date first
+
+    text('audit-count',w(`共 ${allDays.length} 天记录`,`${allDays.length} days recorded`));
+    const totalPages=Math.max(1,Math.ceil(allDays.length/auditPageSize));
+    if(auditPage>totalPages)auditPage=totalPages;
+    if(auditPage<1)auditPage=1;
+    
+    text('pagination-info',w(`第 ${auditPage} / ${totalPages} 页`,`Page ${auditPage} of ${totalPages}`));
+    $('page-prev').disabled=auditPage<=1;
+    $('page-next').disabled=auditPage>=totalPages;
+    
+    // Page numbers buttons
+    const numWrap=$('page-numbers');numWrap.replaceChildren();
+    const startP=Math.max(1,auditPage-2),endP=Math.min(totalPages,startP+4);
+    for(let p=startP;p<=endP;p++){
+      const btn=node('button','page-num'+(p===auditPage?' active':''),String(p));
+      btn.type='button';
+      btn.addEventListener('click',()=>{auditPage=p;renderAuditTable();});
+      numWrap.append(btn);
+    }
+    
+    // Render current 10-day slice
+    const pageRows=allDays.slice((auditPage-1)*auditPageSize,auditPage*auditPageSize);
+    const tbody=$('audit-table-body');tbody.replaceChildren();
+    for(const r of pageRows){
+      const tr=node('tr','');
+      tr.append(
+        node('td','',r.date),
+        node('td','',full(r.turns)),
+        node('td','',full(r.uncached)),
+        node('td','',full(r.output)),
+        node('td','',full(r.cacheRead)),
+        node('td','',full(r.total))
+      );
+      tbody.append(tr);
+    }
+  }
+
+  $('page-prev').addEventListener('click',()=>{if(auditPage>1){auditPage--;renderAuditTable();}});
+  $('page-next').addEventListener('click',()=>{auditPage++;renderAuditTable();});
+  $('trend-date-clear').addEventListener('click',()=>{selectedDate=null;renderTrendSection();});
 
   function renderProfile(){
     const p=value?.profile||{name:'Antigravity User',email:'',avatar:'',initial:'A'};
     text('profile-name',p.name||'Antigravity User');
-    text('profile-email',p.email||'');
+    const handleEl=$('profile-handle');
+    const handle=p.email&&p.email.includes('@')?`@${p.email.split('@')[0]}`:`@${(p.name||'user').toLowerCase().replace(/\s+/g,'')}`;
+    text('profile-handle',handle);
+    handleEl.title=p.email||p.name||'Local User';
+    
     const avatarImg=$('profile-avatar'),fallback=$('profile-fallback');
     if(p.avatar){
       avatarImg.src=p.avatar;avatarImg.style.display='block';fallback.style.display='none';
@@ -689,8 +947,8 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
   function renderCodexBar(){
     if(!value)return;
-    text('codex-today',compact(value.todayTokens??0));
     text('codex-total',compact(value.totalTokens??0));
+    text('codex-today',compact(value.todayTokens??0));
     let peakVal=0,peakDate='';
     for(const d of value.days||[]){
       const t=Object.values(d.models||{}).reduce((sum,m)=>sum+(m.total||0),0);
@@ -717,7 +975,6 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     dialog.setAttribute('aria-label',w('用量统计','Token usage'));
     text('subtitle',w(`本机 ${hostLabel} · 当前账号`,`Local ${hostLabel} · current account`));
     text('activity-title',w('Token 活动','Token activity'));
-    text('detail-title',w('按模型统计','Usage by model'));
     text('locale-label',zh()?'EN':'中');
     for(const [id,lbl]of [['locale',w('切换到英文','Switch to Chinese')],['refresh',w('刷新用量','Refresh usage')],['close',w('关闭','Close')]]){$(id).setAttribute('aria-label',lbl);$(id).title=lbl;}
     text('less',w('少','Less'));text('more',w('多','More'));
@@ -726,7 +983,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       else if(b.dataset.heat==='week')b.textContent=w('每周','Weekly');
       else b.textContent=w('累计','Total');
     }
-    for(const b of view.querySelectorAll('[data-period]'))b.textContent=({day:w('天','Day'),week:w('周','Week'),month:w('月','Month')})[b.dataset.period];
+    for(const b of view.querySelectorAll('[data-trend]')){
+      if(b.dataset.trend==='daily')b.textContent=w('日走势','Daily');
+      else b.textContent=w('模型统计','Models');
+    }
     
     // Switch between Daily Heatmap, Weekly Bar Chart, and Cumulative Total Chart
     $('heat-view').hidden=heatMode!=='day';
@@ -750,7 +1010,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     $('alert').hidden=!alerts.length;text('alert',alerts.join(' · '));
     
     renderActivityMode();
-    renderChart();
+    renderTrendSection();
+    renderStats6Grid();
+    renderAuditTable();
   }
 
   function renderActivityMode(){
@@ -767,8 +1029,11 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     for(const btn of view.querySelectorAll('[data-heat]'))btn.classList.toggle('active',btn.dataset.heat===heatMode);
     renderActivityMode();
   });
-  for(const b of view.querySelectorAll('[data-period]'))b.addEventListener('click',()=>{
-    period=b.dataset.period;renderChart();
+
+  for(const b of view.querySelectorAll('[data-trend]'))b.addEventListener('click',()=>{
+    trendMode=b.dataset.trend;
+    for(const btn of view.querySelectorAll('[data-trend]'))btn.classList.toggle('active',btn.dataset.trend===trendMode);
+    renderTrendSection();
   });
 
   function syncYear(){
@@ -796,7 +1061,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   page.addEventListener('scroll',closeYearOnScroll,{passive:true});function closeYearOnScroll(){closeYear(false);}
   window.addEventListener('resize',positionYear);
 
-  for(const [id,step]of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{anchor=period==='day'?month(anchor,step):period==='week'?add(anchor,step*84):month(anchor,step*12);renderChart();});
+  for(const [id,step]of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{anchor=month(anchor,step);renderTrendSection();});
   $('locale').addEventListener('click',()=>void onLanguage(zh()?'en':'zh-CN'));
   $('refresh').addEventListener('click',async()=>{
     if(busy||disposed)return;busy=true;const button=$('refresh'),turn=600,started=performance.now();button.disabled=true;button.setAttribute('aria-busy','true');
