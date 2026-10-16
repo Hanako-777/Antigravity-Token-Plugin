@@ -600,6 +600,7 @@ module.exports = function installAgPulseInlineWidget() {
         .usage-summary strong{font-size:20px;font-weight:550;letter-spacing:-.5px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums}.usage-unit{font-size:9px;letter-spacing:0;color:var(--pulse-muted)}
         #open-usage{align-items:center;min-height:34px;gap:12px;width:calc(100% + 12px);margin:5px -6px -3px;padding:7px 6px;border:0;border-radius:6px;background:transparent;color:var(--pulse-label);font-size:11px;text-align:left;line-height:20px}#open-usage:hover{background:var(--pulse-hover);color:var(--pulse-foreground)}#open-usage svg{width:14px;height:14px;color:var(--pulse-muted);flex:none}
       `;
+      usageDashboard=window.__agPulseUsageFactory({root,language,setMarkup,hostLabel:surface?.usageHostLabel||'Antigravity',guideDismissed:usageGuideDismissed,onDismissGuide:async()=>{const saved=await window.agPulseHost.setPreferences({usageGuideDismissed:true});if(saved?.usageGuideDismissed!==true)throw Error('Usage guide could not be saved');syncGuide(saved);},onLanguage:next=>preferences.choose(next),onRefresh:()=>refreshManually()});
       $('open-usage').addEventListener('click',()=>{
         hide();
         if(window.agPulseHost?.openHUD){
