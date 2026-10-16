@@ -1,0 +1,42 @@
+name: Verify
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: npm test
+      - name: Stream an optional transcript without retaining its text
+        run: node --expose-gc tools/check-transcript-resources.mjs
+      - name: Stream a synthetic corpus above the former 512 MiB cap
+        run: node --expose-gc tools/check-trajectory-resources.mjs 640 1024
+      - name: Reject over-budget projected statistics without partial cache
+        run: node --expose-gc tools/check-trajectory-resources.mjs 0 32768 --expect-budget-rejection
+      - run: node --test ide/tests/*.test.mjs
+      - run: python -m unittest discover -s tests -v
+      - name: Install Chromium for shared UI regressions
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - run: npm run test:ui
+      - run: node tools/check-ide-ui.mjs
+      - run: npm run test:usage-ui
+      - run: npm run test:panel-ui
+      - run: python manage.py package
+      - run: python ide/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: antigrative-dashboard-${{ matrix.os }}
+          path: dist/*

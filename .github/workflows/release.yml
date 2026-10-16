@@ -1,0 +1,66 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  host-resources:
+    uses: ./.github/workflows/host-resources.yml
+    permissions:
+      contents: read
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: npm test
+      - name: Stream a synthetic corpus above the former 512 MiB cap
+        run: node --expose-gc tools/check-trajectory-resources.mjs 640 1024
+      - name: Reject over-budget projected statistics without partial cache
+        run: node --expose-gc tools/check-trajectory-resources.mjs 0 32768 --expect-budget-rejection
+      - run: node --test ide/tests/*.test.mjs
+      - run: python -m unittest discover -s tests -v
+      - name: Install Chromium for shared UI regressions
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - run: npm run test:ui
+      - run: node tools/check-ide-ui.mjs
+      - run: npm run test:usage-ui
+      - run: npm run test:panel-ui
+      - run: python manage.py package
+      - run: python ide/package.py
+  release:
+    needs: [verify, host-resources]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check version
+        shell: pwsh
+        run: |
+          $version = (Get-Content plugin.json -Raw | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag and plugin version differ' }
+      - run: npm test
+      - run: python -m unittest discover -s tests -v
+      - run: python manage.py package
+      - run: python ide/package.py
+      - name: Publish desktop/CLI ZIP and IDE VSIX with checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/publish-release.py

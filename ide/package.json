@@ -1,0 +1,20 @@
+{
+  "name": "antigrative-dashboard-ide",
+  "displayName": "Antigrative Dashboard IDE",
+  "publisher": "you-should-know-me",
+  "version": "0.8.7",
+  "description": "Adaptive throughput, cache and context icons with local token usage charts in the Antigravity IDE Agent composer.",
+  "license": "MIT",
+  "repository": {"type":"git","url":"https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard.git"},
+  "extensionKind": ["ui"],
+  "engines": {"vscode": "^1.107.0"},
+  "main": "./ide/extension.cjs",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [{"command":"antigrativeDashboard.ide.openHealth","title":"Antigrative Dashboard: Show IDE Status"}],
+    "configuration": {
+      "title":"Antigrative Dashboard IDE",
+      "properties":{"antigrativeDashboard.ide.enabled":{"type":"boolean","default":true,"description":"Enable the standalone Antigravity IDE composer integration. Start the IDE with the loopback debugging flags described in the README."}}
+    }
+  }
+}

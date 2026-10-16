@@ -1,0 +1,7 @@
+{
+  "name": "antigravity-pulse",
+  "display_name": "Antigravity Token Plugin",
+  "description": "Antigravity Inline Widget & Desktop HUD Token Tracker with Morandi styling and quota monitoring.",
+  "version": "1.0.0",
+  "logo": "assets/logo.svg"
+}

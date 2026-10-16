@@ -1,0 +1,170 @@
+{
+  "version": "0.8.0",
+  "source": "compat/inline-widget.cjs",
+  "data": "illustrative",
+  "scale": 2,
+  "files": [
+    "hero.png",
+    "responsive.png",
+    "speed.png",
+    "widget.png",
+    "context.png",
+    "usage-overview.png",
+    "usage-details.png",
+    "usage-intro.png",
+    "hero-zh.png",
+    "responsive-zh.png",
+    "speed-zh.png",
+    "widget-zh.png",
+    "context-zh.png",
+    "usage-overview-zh.png",
+    "usage-details-zh.png",
+    "usage-intro-zh.png"
+  ],
+  "diagnostics": [
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "icons",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "subagent",
+      "density": "full",
+      "context": "12%",
+      "cache": "75.0%",
+      "tps": "160.0",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "icons",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "subagent",
+      "density": "full",
+      "context": "12%",
+      "cache": "75.0%",
+      "tps": "160.0",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    },
+    {
+      "scope": "main",
+      "density": "full",
+      "context": "44%",
+      "cache": "83.8%",
+      "tps": "104.6",
+      "nativeTargetsSafe": true
+    }
+  ]
+}
