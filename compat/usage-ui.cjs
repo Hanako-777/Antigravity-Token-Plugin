@@ -68,7 +68,8 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .year-option[aria-selected=true] .year-check{opacity:1}
     
     /* Heatmap Grid with Diagonal Ripple Transition */
-    .heat-wrap{overflow-x:auto;padding:2px 2px 6px}
+    .heat-wrap{overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;-ms-overflow-style:none}
+    .heat-wrap::-webkit-scrollbar{display:none;width:0;height:0}
     .calendar{min-width:680px}
     .months{display:grid;margin-left:31px;font-size:10px;color:var(--pulse-muted);margin-bottom:7px}
     .months span{white-space:nowrap}
@@ -89,15 +90,16 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .swatch{width:11px;height:11px;border-radius:3px;background:var(--pulse-hover)}
     
     /* Bar Charts & Cumulative Line Chart */
-    .chart-wrap{overflow-x:auto;padding-bottom:12px;padding-top:4px}
-    .chart{height:246px;display:flex;gap:14px;min-width:650px}
+    .chart-wrap{overflow-x:auto;padding-bottom:12px;padding-top:4px;scrollbar-width:none;-ms-overflow-style:none}
+    .chart-wrap::-webkit-scrollbar{display:none;width:0;height:0}
+    .chart{height:246px;display:flex;gap:14px;min-width:0;width:100%}
     .chart.wide-scroll{min-width:1380px}
     .axis{width:42px;flex:none;position:relative;font-size:10px;color:var(--pulse-muted)}
     .axis span{position:absolute;right:0;transform:translateY(50%)}
-    .plot{position:relative;flex:1;display:flex;align-items:stretch;gap:5px;padding:0 1px}
+    .plot{position:relative;flex:1;display:flex;align-items:stretch;gap:4px;padding:0 1px}
     .grid-line{position:absolute;left:0;right:0;border-top:1px solid var(--pulse-separator);pointer-events:none;opacity:.45}
     .grid-line:first-child{opacity:.85}
-    .bar-column{position:relative;flex:1;min-width:26px;display:flex;align-items:flex-end;border:0;border-radius:4px;background:transparent;padding:0;margin-bottom:19px;cursor:pointer}
+    .bar-column{position:relative;flex:1;min-width:0;display:flex;align-items:flex-end;border:0;border-radius:4px;background:transparent;padding:0;margin-bottom:19px;cursor:pointer}
     .bar-column:hover{background:transparent}
     .bar-column:active{transform:none}
     
@@ -141,7 +143,8 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .stat-card-sub{font-size:10.5px;color:var(--pulse-muted);margin-top:2px}
     
     /* Daily Audit Table & Pagination */
-    .table-wrap{overflow:auto}
+    .table-wrap{overflow:auto;scrollbar-width:none;-ms-overflow-style:none}
+    .table-wrap::-webkit-scrollbar{display:none;width:0;height:0}
     .table{width:100%;border-collapse:collapse;text-align:right;font-size:11.5px;white-space:nowrap}
     .table th{font-weight:500;color:var(--pulse-muted);padding:9px 14px;border-bottom:1px solid var(--pulse-separator);background:var(--pulse-hover)}
     .table td{padding:10px 14px;border-bottom:1px solid var(--pulse-separator);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
