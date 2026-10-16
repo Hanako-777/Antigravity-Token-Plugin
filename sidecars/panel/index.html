@@ -62,7 +62,13 @@
       </article>
       <article class="detail-card" id="cache-card" role="tabpanel" tabindex="0" aria-labelledby="cache-tab" hidden>
         <div class="card-heading"><span><svg class="icon"><use href="#cache"/></svg><span data-i18n="cacheTitle">Token cache</span></span><span class="card-tag" id="cache-coverage">—</span></div>
-        <dl><div><dt data-i18n="cacheRate">Cache hit</dt><dd id="cache-rate">—</dd></div><div><dt data-i18n="cacheMiss">Uncached input</dt><dd id="cache-miss">—</dd></div><div><dt data-i18n="cacheRead">Cache read</dt><dd id="cache-read">—</dd></div><div><dt data-i18n="cacheOutput">Output</dt><dd id="cache-output">—</dd></div><div id="cache-write-row" hidden><dt data-i18n="cacheWrite">Cache write</dt><dd id="cache-write">—</dd></div></dl><p class="card-footnote" id="cache-note" hidden></p>
+        <dl><div><dt data-i18n="cacheRate">Cache hit</dt><dd id="cache-rate">—</dd></div><div><dt data-i18n="cacheMiss">Uncached input</dt><dd id="cache-miss">—</dd></div><div><dt data-i18n="cacheRead">Cache read</dt><dd id="cache-read">—</dd></div><div><dt data-i18n="cacheOutput">Output</dt><dd id="cache-output">—</dd></div><div id="cache-write-row" hidden><dt data-i18n="cacheWrite">Cache write</dt><dd id="cache-write">—</dd></div></dl>
+        <div class="panel-hud-row" style="margin-top:14px;padding-top:10px;border-top:1px solid var(--pulse-separator)">
+          <button type="button" id="panel-open-hud" style="width:100%;height:32px;border:1px solid rgba(56,189,248,0.35);border-radius:8px;background:linear-gradient(135deg,rgba(56,189,248,0.18),rgba(244,114,182,0.18));color:#38bdf8;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+            <span>🖥️ 打开桌面审计大屏 (Codex HUD)</span>
+          </button>
+        </div>
+        <p class="card-footnote" id="cache-note" hidden></p>
       </article>
       <article class="detail-card" id="context-card" role="tabpanel" tabindex="0" aria-labelledby="context-tab" hidden>
         <div class="card-heading"><span data-i18n="context">Context window</span></div>

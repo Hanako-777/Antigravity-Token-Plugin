@@ -47,6 +47,12 @@ for (const chip of chips) {
     event.preventDefault();showCard(chips[next].dataset.card);chips[next].focus();
   });
 }
+$('panel-open-hud')?.addEventListener('click', async () => {
+  try {
+    const transport = host?.fetch ? host.fetch.bind(host) : fetch;
+    await transport('/api/open-hud', { method: 'POST' });
+  } catch {}
+});
 function localize(){
   document.documentElement.lang=language.language;
   for(const e of document.querySelectorAll('[data-i18n]'))e.textContent=t(e.dataset.i18n);
