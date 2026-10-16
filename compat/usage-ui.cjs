@@ -728,7 +728,6 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     if(trendMode==='daily'){
       $('trend-range').style.display='flex';
       $('legend').style.display='flex';
-      $('trend-date-badge').hidden=true;
       text('trend-title',w('Token 使用趋势 · 日走势','Token Usage Trend · Daily'));
       
       const start=month(anchor,0),end=add(month(anchor,1),-1);
