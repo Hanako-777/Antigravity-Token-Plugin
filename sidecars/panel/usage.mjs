@@ -1,6 +1,8 @@
 // Local usage ledger. Never stores prompts, credentials or raw request IDs.
 import {readFile,writeFile,mkdir,rename,readdir,unlink} from 'node:fs/promises';
+import {readFileSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
+import {homedir} from 'node:os';
 import {createHash,randomUUID} from 'node:crypto';
 import {tokenCount,requestCacheMetrics} from './metrics.mjs';
 import {platformPaths} from '../../compat/platform.mjs';
@@ -12,6 +14,24 @@ const keys=['uncached','cacheRead','cacheWrite','output'];
 const cleanModel=value=>String(value||'Unknown').replace(/[\x00-\x1f\x7f]/g,'').slice(0,120);
 const stamp=value=>typeof value==='string'&&/^20\d\d-\d\d-\d\dT/.test(value)&&Number.isFinite(Date.parse(value))?Date.parse(value):null;
 const sum=r=>keys.reduce((n,k)=>n+(r[k]??0),0);
+
+function getUserProfile(){
+  try{
+    const credsPath=join(homedir(),'.gemini','oauth_creds.json');
+    if(existsSync(credsPath)){
+      const data=JSON.parse(readFileSync(credsPath,'utf8'));
+      if(data.id_token&&data.id_token.includes('.')){
+        const payload=JSON.parse(Buffer.from(data.id_token.split('.')[1],'base64url').toString('utf8'));
+        const name=payload.name||(payload.email?payload.email.split('@')[0]:'User');
+        const email=payload.email||'';
+        const avatar=payload.picture||'';
+        const initial=name?name[0].toUpperCase():'U';
+        return {name,email,avatar,initial};
+      }
+    }
+  }catch{}
+  return {name:'Antigravity User',email:'',avatar:'',initial:'A'};
+}
 export function dateKey(time,zone='Asia/Shanghai'){
   const parts=new Intl.DateTimeFormat('en-CA',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(time);
   const get=key=>parts.find(p=>p.type===key).value;return `${get('year')}-${get('month')}-${get('day')}`;
@@ -108,7 +128,7 @@ export class UsageLedger{
       weekTokens:days.filter(d=>d.date>=weekStart(today)&&d.date<=today).reduce((n,d)=>n+total(d),0),
       monthTokens:days.filter(d=>d.date.slice(0,7)===today.slice(0,7)&&d.date<=today).reduce((n,d)=>n+total(d),0),
       totalTokens:days.reduce((n,d)=>n+total(d),0)+unknownTokens,unknownTokens,unknownRequests,partialRequests,unreadableFiles:unreadable,
-      requests:seen.size,firstDate:days[0]?.date||null,updatedAt:new Date(now).toISOString(),source:this.source};
+      requests:seen.size,firstDate:days[0]?.date||null,updatedAt:new Date(now).toISOString(),source:this.source,profile:getUserProfile()};
     this.cache={key:cacheKey,revision:this.revision,value};return value;
   }
 }
