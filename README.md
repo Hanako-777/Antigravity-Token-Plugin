@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/hero.png?v=0.8.0" width="100%" alt="Antigravity Token Plugin: Generation speed, cache, context, and full-featured token usage dashboard.">
+<img src="docs/assets/hero.png" width="100%" alt="Antigravity Token Plugin: Generation speed, cache, context, and full-featured token usage dashboard.">
 
 # Antigravity Token Plugin
 
@@ -14,16 +14,16 @@ Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)
 
-[Preview](#preview) · [Original Author Credit](#-acknowledgements--credits) · [Key Highlights](#-key-highlights) · [IDE](#antigravity-ide) · [CLI Status Line](#antigravity-cli-status-line) · [Installation](#-installation) · [FAQ](#faq) · [中文文档](README.zh-CN.md)
+[Preview](#preview) · [Acknowledgements & Credits](#acknowledgements--credits) · [Key Highlights](#key-highlights) · [IDE](#antigravity-ide) · [CLI Status Line](#antigravity-cli-status-line) · [Installation](#installation) · [FAQ](#faq) · [中文文档](README.zh-CN.md)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> ### 🌟 Acknowledgements & Credits
+> ### Acknowledgements & Credits
 > 
-> This project (**Antigravity Token Plugin**) is an enhanced fork and redesign based on the outstanding open-source work of **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)** on **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)**.
+> This project (**Antigravity Token Plugin**) is an enhanced fork and redesign based on the open-source project **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)** created by **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)**.
 > 
 > We extend our deepest gratitude to the original author for pioneering the sidecar CDP debugging injection, local history collection, and cross-platform architecture! Building on that strong foundation, this project introduces enlarged typography, streamlined inline progress bars, a redesigned card layout, and a full HUD-grade Token Analytics Dashboard featuring dual contribution grids (daily & weekly), cumulative total area charts with data points, multi-model fixed comparison bar charts, a 10-day paginated daily audit table, and integrated one-click repository self-updates.
 > 
@@ -32,29 +32,27 @@ Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 
 ---
 
-## 📸 Preview
-
-<img src="docs/assets/responsive.png?v=0.8.0" width="100%" alt="Compact three-metric controls in narrow view and subagent isolated statistics.">
+## Preview
 
 <table>
-<tr><th width="50%">Generation Speed & Cache Details</th><th width="50%">Streamlined Context & Quotas Card</th></tr>
+<tr><th width="50%">Generation Speed Details</th><th width="50%">Streamlined Context & Quotas Card</th></tr>
 <tr>
-<td width="50%" valign="top"><img src="docs/assets/speed.png?v=0.8.0" width="100%" alt="Generation speed detail card"><br><img src="docs/assets/widget.png?v=0.8.0" width="100%" alt="Token and cache detail card"></td>
-<td width="50%" valign="top"><img src="docs/assets/context.png?v=0.8.0" width="100%" alt="Context and quota details with inline progress bars and merged reset countdown"></td>
+<td width="50%" valign="top"><img src="docs/assets/speed.png" width="100%" alt="Generation speed detail card"></td>
+<td width="50%" valign="top"><img src="docs/assets/context.png" width="100%" alt="Context and quota details with inline progress bars and merged reset countdown"></td>
 </tr>
 </table>
 
 <table>
-<tr><th width="50%">Dual Contribution Grids (Daily / Weekly)</th><th width="50%">Model Breakdown & Daily Audit Table</th></tr>
+<tr><th width="50%">Activity Overview (Codex Bar & Heatmap)</th><th width="50%">Model Breakdown, 6-Grid & Daily Audit Table</th></tr>
 <tr>
-<td width="50%" valign="top"><img src="docs/assets/usage-overview.png?v=0.8.0" width="100%" alt="Annual daily and weekly contribution heatmaps"></td>
-<td width="50%" valign="top"><img src="docs/assets/usage-details.png?v=0.8.0" width="100%" alt="Multi-model bar chart and audit table"></td>
+<td width="50%" valign="top"><img src="docs/assets/usage-overview.png" width="100%" alt="Annual daily and weekly contribution heatmaps"></td>
+<td width="50%" valign="top"><img src="docs/assets/usage-details.png" width="100%" alt="Multi-model bar chart, 6-grid stats, and audit table"></td>
 </tr>
 </table>
 
 ---
 
-## ✨ Key Highlights
+## Key Highlights
 
 ### 1. Refined Hover Detail Popovers & Typography
 - **Larger, Legible Typography**: Base font sizes upgraded to 12.5px ~ 13.5px for crisp readability without squinting.
@@ -82,7 +80,7 @@ Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 
 ---
 
-## 💻 Antigravity IDE
+## Antigravity IDE
 
 A standalone VSIX package is available for the Google Antigravity standalone IDE. In the Extensions view, select **Install from VSIX…** without requiring the desktop App.
 
@@ -94,7 +92,7 @@ Responsive controls automatically switch to 3-icon mode on narrow panes. See [ID
 
 ---
 
-## 📟 Antigravity CLI Status Line
+## Antigravity CLI Status Line
 
 An independent adapter for the official Antigravity CLI `statusLine` interface:
 - Displays context occupancy, cache read tokens, status, and grouped quotas in your terminal footer.
@@ -104,7 +102,7 @@ An independent adapter for the official Antigravity CLI `statusLine` interface:
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Desktop App (Windows / Linux / macOS)
 
@@ -125,6 +123,29 @@ Supported on **Antigravity Desktop App 2.21.1 / 2.22.0+** with **Python 3.10+**.
 3. **Restart Antigravity**:
    Fully restart your Antigravity application. Open any chat to see the live metrics strip beside the model selector!
 
+<details>
+<summary><strong>Let an AI Agent install it: View prompt</strong></summary>
+
+```text
+Please help me install and enable Antigravity Token Plugin.
+Repository: https://github.com/Hanako-777/Antigravity-Token-Plugin
+1. Read README.md, COMPATIBILITY.md, docs/CLI.md, and ide/README.md. First perform
+   read-only checks to analyze the OS, executable paths, host version, and existing
+   plugin configurations. Distinguish among Desktop App, Antigravity CLI (agy),
+   and standalone Antigravity IDE.
+2. Before downloading packages or modifying files, explain which hosts were detected
+   and ask for confirmation on whether to install the App, CLI, or standalone IDE adapter.
+3. Check the latest release, verify SHA256, and extract the source into a dedicated directory.
+4. Using Python 3.10+ (python3 on Linux/macOS), run according to target:
+   - Desktop App: python manage.py status, then python manage.py install.
+   - CLI: verify agy --version and Node.js 20+, run python manage.py install-cli.
+   - Standalone IDE: Install via VSIX or ide/manage.py install.
+5. Preserve existing settings and historical data. Advise when a host restart is required.
+6. Verify inside the host and summarize the installed version, target path, and management commands.
+```
+
+</details>
+
 ### Plugin Management Commands
 
 Run from the project root:
@@ -139,7 +160,7 @@ Run from the project root:
 
 ---
 
-## 📊 Measurement Methodology
+## Measurement Methodology
 
 | Metric | Calculation |
 | :--- | :--- |
@@ -152,7 +173,7 @@ Run from the project root:
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 <details>
 <summary><strong>Q: Widget does not appear after installation?</strong></summary>
@@ -182,7 +203,7 @@ The plugin connects via the Electron local debugging port without patching `app.
 
 ---
 
-## 📜 License & Credits
+## License & Credits
 
 - Licensed under the [MIT License](LICENSE).
 - Deepest appreciation again to the original author **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)** for the pioneering **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)** project.

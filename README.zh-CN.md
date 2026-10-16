@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/hero-zh.png?v=0.8.0" width="100%" alt="Antigravity Token Plugin：速度、缓存、上下文与全功能 Token 用量统计仪表盘">
+<img src="docs/assets/hero-zh.png" width="100%" alt="Antigravity Token Plugin：速度、缓存、上下文与全功能 Token 用量统计仪表盘">
 
 # Antigravity Token Plugin
 
@@ -14,47 +14,45 @@
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)
 
-[功能预览](#功能预览) · [原作者致敬](#-原作者与致谢) · [特色亮点](#-核心特色) · [IDE 适配](#antigravity-ide) · [CLI 状态栏](#antigravity-cli-状态栏) · [开始安装](#-安装指南) · [常见问题](#常见问题) · [English](README.md)
+[功能预览](#功能预览) · [原作者与致谢](#原作者与致谢) · [核心特色](#核心特色) · [IDE 适配](#antigravity-ide) · [CLI 状态栏](#antigravity-cli-状态栏) · [安装指南](#安装指南) · [常见问题](#常见问题) · [English](README.md)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> ### 🌟 原作者与致谢 / Acknowledgements
+> ### 原作者与致谢 / Acknowledgements
 > 
-> 本项目（**Antigravity Token Plugin**）深度衍生并重构自原作者 **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)** 的优秀开源项目 **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)**。
+> 本项目（**Antigravity Token Plugin**）深度衍生并重构自原作者 **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)** 的开源项目 **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)**。
 > 
-> 感谢原作者在反重力插件架构、CDP 调试注入、本地会话采集与多端适配上奠定的坚实基础与卓越贡献！本项目在原版优秀架构的基础上，进行了全面的界面美化、字号重构、紧凑排版优化，并新增了全功能 HUD 级 Token 用量中心（双热力图格子、累计面积走势图、多模型固定对比柱状图、10 天分页审计表与仓库自升级机制）。
+> 感谢原作者在反重力插件架构、CDP 调试注入、本地会话采集与多端适配上奠定的坚实基础与卓越贡献！本项目在原版优秀架构的基础上，进行了界面的深度美化与字号重构、紧凑排版优化，并新增了全功能 HUD 级 Token 用量中心（双热力图格子、累计面积走势图、多模型固定对比柱状图、10 天分页审计表与仓库自升级机制）。
 > 
 > * 原作者 GitHub：[@YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)
 > * 原项目仓库：[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
 
 ---
 
-## 📸 功能预览
-
-<img src="docs/assets/responsive-zh.png?v=0.8.0" width="100%" alt="输入框旁的紧凑三项控件与子代理独立统计">
+## 功能预览
 
 <table>
-<tr><th width="50%">生成速度与缓存详情</th><th width="50%">全新上下文与额度精简卡片</th></tr>
+<tr><th width="50%">生成速度详情</th><th width="50%">全新上下文与额度精简卡片</th></tr>
 <tr>
-<td width="50%" valign="top"><img src="docs/assets/speed-zh.png?v=0.8.0" width="100%" alt="生成速度详情卡"><br><img src="docs/assets/widget-zh.png?v=0.8.0" width="100%" alt="Token 与缓存详情卡"></td>
-<td width="50%" valign="top"><img src="docs/assets/context-zh.png?v=0.8.0" width="100%" alt="上下文与额度详情卡，进度条紧跟数值，倒计时合并显示"></td>
+<td width="50%" valign="top"><img src="docs/assets/speed-zh.png" width="100%" alt="生成速度详情卡"></td>
+<td width="50%" valign="top"><img src="docs/assets/context-zh.png" width="100%" alt="上下文与额度详情卡，进度条紧跟数值，倒计时合并显示"></td>
 </tr>
 </table>
 
 <table>
-<tr><th width="50%">双热力图活动概览（日 / 周格子图）</th><th width="50%">按模型统计走势图与每日审计明细</th></tr>
+<tr><th width="50%">活动概览（Codex 数据栏与贡献热力图）</th><th width="50%">模型趋势、6宫格统计与每日审计明细</th></tr>
 <tr>
-<td width="50%" valign="top"><img src="docs/assets/usage-overview-zh.png?v=0.8.0" width="100%" alt="年度每日与每周热力图概览"></td>
-<td width="50%" valign="top"><img src="docs/assets/usage-details-zh.png?v=0.8.0" width="100%" alt="多模型柱状图与审计明细"></td>
+<td width="50%" valign="top"><img src="docs/assets/usage-overview-zh.png" width="100%" alt="年度每日与每周热力图概览"></td>
+<td width="50%" valign="top"><img src="docs/assets/usage-details-zh.png" width="100%" alt="多模型柱状图、6宫格统计与审计明细"></td>
 </tr>
 </table>
 
 ---
 
-## ✨ 核心特色
+## 核心特色
 
 ### 1. 全新大字号与精简悬浮卡
 - **清晰大字号排版**：采用 12.5px ~ 13.5px 优雅基准字号，相比原版微小字体更易看清，减少视力疲劳。
@@ -82,7 +80,7 @@
 
 ---
 
-## 💻 Antigravity IDE
+## Antigravity IDE
 
 提供独立的 VSIX 扩展包，直接适配 Google Antigravity 独立 IDE。在 IDE 扩展视图选择「从 VSIX 安装」即可，无需安装桌面端 App。
 
@@ -94,7 +92,7 @@
 
 ---
 
-## 📟 Antigravity CLI 状态栏
+## Antigravity CLI 状态栏
 
 针对官方 Antigravity CLI 提供了独立轻量状态栏适配器（`statusLine`）：
 - 终端底部实时显示上下文占用、缓存读取 Token、会话状态与分组额度。
@@ -104,7 +102,7 @@
 
 ---
 
-## 🚀 安装指南
+## 安装指南
 
 ### 桌面端 App 安装 (Windows / Linux / macOS)
 
@@ -125,6 +123,39 @@
 3. **重启 Antigravity**：
    完全退出并重新打开 Antigravity 桌面应用，进入任意对话，输入框上方或模型选择器旁即可看到控件！
 
+<details>
+<summary><strong>让 Agent 帮你安装：展开完整提示词</strong></summary>
+
+```text
+请帮我安装并启用 Antigravity Token Plugin。
+仓库：https://github.com/Hanako-777/Antigravity-Token-Plugin
+1. 读取 README.md、COMPATIBILITY.md、docs/CLI.md 和 ide/README.md。先用只读检查
+   分析系统、可执行文件、宿主版本和已有插件配置，区分桌面 App、Antigravity CLI
+   （agy）和独立 Antigravity IDE；不能仅凭系统判断安装目标。
+2. 下载安装包或修改配置前，向我说明检测到哪些宿主，并让我明确确认要安装
+   App、CLI 还是独立 IDE 适配。如同时安装了多个，让我选一个或多个；无法识别
+   则询问可执行文件路径。不要因为我是 Linux 或在终端里就默认安装桌面端。
+3. 查询最新稳定发布，说明插件版本、宿主版本和路径、选定适配器。App 与 CLI
+   共用 ZIP，但安装命令不同；独立 IDE 使用单独 VSIX。只下载已确认目标需要的
+   文件并校验 SHA256，将源码解压到固定目录。不要未经单独确认安装、升级、
+   降级或替换 Antigravity 宿主。
+4. 使用 Python 3.10+（Linux/macOS 通常用 python3），按确认的目标执行：
+   - App：先 python manage.py status，再 python manage.py install。
+   - CLI：检查 agy --version 和 Node.js 20+，执行 python manage.py install-cli，
+     不要执行 manage.py install。已有 statusLine 按 CLI 文档备份／覆盖流程处理。
+     CLI 缓存率有适用条件，按 docs/CLI.md 核对实测模型／版本及不可用情况。
+     不承诺 CLI 展示 tok/s 或本地用量图表，这些不在 CLI 适配范围内。
+   - 独立 IDE：通过 Install from VSIX... 安装发布版 VSIX，或使用
+     ide/manage.py install --exe <已核实的IDE可执行文件> --vsix <发布版VSIX>。
+     不需要桌面 App，不要执行 App 安装器。
+5. 保留其他设置和已保存数据。需要重启或登录时先告知，不强制结束正在执行的
+   任务。IDE 按文档保留本机回环调试启动参数；CLI 在新会话中验证。
+6. 在选定的真实宿主中验证，报告插件／宿主版本、安装目标和路径、实际完成的
+   检查、剩余步骤，以及该适配器的停用／卸载方法。下载 ZIP 不代表 CLI 已安装成功。
+```
+
+</details>
+
 ### 管理与日常命令
 
 在项目根目录下可随时执行以下管理命令：
@@ -139,7 +170,7 @@
 
 ---
 
-## 📊 数据口径说明
+## 数据口径说明
 
 | 指标 | 统计口径 |
 | :--- | :--- |
@@ -152,7 +183,7 @@
 
 ---
 
-## ❓ 常见问题
+## 常见问题
 
 <details>
 <summary><strong>Q: 安装后打开应用没有出现控件？</strong></summary>
@@ -182,7 +213,7 @@
 
 ---
 
-## 📜 开源许可与鸣谢
+## 开源许可与鸣谢
 
 - 源码基于 [MIT 许可证](LICENSE) 分发。
 - 再次衷心致敬原作者 **[YOU-SHOULD-KNOW-ME](https://github.com/YOU-SHOULD-KNOW-ME)** 的开创性原项目 **[antigrative-dashboard](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)**。
