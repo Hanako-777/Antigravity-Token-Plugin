@@ -23,10 +23,10 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     
     /* User Profile Hero (Centered at Top) */
     .profile-hero{display:flex;flex-direction:column;align-items:center;text-align:center;margin:4px 0 10px}
-    .avatar-wrap{position:relative;width:78px;height:78px;margin-bottom:8px}
-    .avatar-img{width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid var(--pulse-border);box-shadow:0 4px 14px rgba(0,0,0,0.14);display:block}
-    .avatar-fallback{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,var(--pulse-accent),#ec4899);color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:600;border:2px solid var(--pulse-border)}
-    .profile-name{font-size:18px;font-weight:650;color:var(--pulse-foreground);line-height:1.25;letter-spacing:-.2px}
+    .avatar-wrap{position:relative;width:96px;height:96px;margin-bottom:9px}
+    .avatar-img{width:96px;height:96px;border-radius:50%;object-fit:cover;border:2.5px solid var(--pulse-border);box-shadow:0 6px 18px rgba(0,0,0,0.16);display:block}
+    .avatar-fallback{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--pulse-accent),#ec4899);color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:600;border:2.5px solid var(--pulse-border)}
+    .profile-name{font-size:19px;font-weight:650;color:var(--pulse-foreground);line-height:1.25;letter-spacing:-.2px}
     .profile-handle{font-size:12.5px;color:var(--pulse-muted);margin-top:3px;cursor:help;transition:color 0.15s ease}
     .profile-handle:hover{color:var(--pulse-accent)}
     
@@ -129,9 +129,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .range strong{font-size:12px;font-weight:500;min-width:106px;text-align:center}
     .chart-summary{font-size:11px;color:var(--pulse-muted);margin-top:2px}
     .chart-summary strong{color:var(--pulse-foreground);font-weight:600}
-    .date-filter-badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;background:var(--pulse-hover);border:1px solid var(--pulse-border);border-radius:6px;font-size:11px;color:var(--pulse-accent);margin-left:8px}
-    .date-filter-badge button{border:0;background:transparent;padding:0 2px;color:var(--pulse-muted);font-size:12px;cursor:pointer}
-    .date-filter-badge button:hover{color:var(--pulse-foreground)}
+    /* date filter badge removed */
     
     /* 6-Grid Stats in Token 消费统计 */
     .stats-6-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
@@ -144,11 +142,14 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     
     /* Daily Audit Table & Pagination */
     .table-wrap{overflow:auto}
-    .table{width:100%;border-collapse:collapse;text-align:right;font-size:11px;white-space:nowrap}
+    .table{width:100%;border-collapse:collapse;text-align:right;font-size:11.5px;white-space:nowrap}
     .table th{font-weight:500;color:var(--pulse-muted);padding:9px 14px;border-bottom:1px solid var(--pulse-separator);background:var(--pulse-hover)}
-    .table td{padding:10px 14px;border-bottom:1px solid var(--pulse-separator)}
-    .table th:first-child,.table td:first-child{text-align:left}
+    .table td{padding:10px 14px;border-bottom:1px solid var(--pulse-separator);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+    .table th:first-child,.table td:first-child{text-align:left;font-family:inherit;font-weight:500;color:var(--pulse-foreground)}
     .table tr:last-child td{border-bottom:0}
+    .table tr:hover td{background:var(--pulse-hover)}
+    .today-tag{font-size:10px;font-weight:500;padding:1px 5px;background:rgba(59,130,246,0.14);color:var(--pulse-accent);border-radius:4px;margin-left:6px;font-family:inherit}
+    .col-total{font-weight:600;color:var(--pulse-accent)}
     .pagination-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid var(--pulse-separator);background:var(--pulse-hover);font-size:11px}
     .pagination-btns{display:flex;align-items:center;gap:6px}
     .page-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--pulse-border);background:var(--pulse-control);color:var(--pulse-foreground);font-size:11px;cursor:pointer;transition:all 0.14s ease}
@@ -221,12 +222,12 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     <!-- Codex 5-Metrics Hero Bar (Original Order & Types) -->
     <section class="codex-bar">
       <div class="codex-col">
-        <div class="codex-num" id="codex-total">—</div>
-        <div class="codex-label" id="codex-total-label">累计 Token 数</div>
-      </div>
-      <div class="codex-col">
         <div class="codex-num" id="codex-today">—</div>
         <div class="codex-label" id="codex-today-label">今日实际消耗</div>
+      </div>
+      <div class="codex-col">
+        <div class="codex-num" id="codex-total">—</div>
+        <div class="codex-label" id="codex-total-label">累计 Token 数</div>
       </div>
       <div class="codex-col">
         <div class="codex-num" id="codex-peak">—</div>
@@ -312,15 +313,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     <!-- Section 2: Token 使用趋势 (Trend & Model Breakdown Chart) -->
     <section class="card-container" id="section-trend">
       <div class="section-header">
-        <div style="display:flex;align-items:center;">
-          <div class="section-title">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-            <span id="trend-title">Token 使用趋势</span>
-          </div>
-          <div id="trend-date-badge" class="date-filter-badge" hidden>
-            <span id="trend-date-text"></span>
-            <button type="button" id="trend-date-clear" title="清除筛选 / 查看整月">×</button>
-          </div>
+        <div class="section-title">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span id="trend-title">Token 使用趋势</span>
         </div>
         <div class="chart-controls">
           <div class="range" id="trend-range">
@@ -390,7 +385,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       <div style="padding: 13px 18px; border-bottom: 1px solid var(--pulse-separator); display:flex; justify-content:space-between; align-items:center;">
         <div class="section-title">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          <span>每日消费审计明细</span>
+          <span id="audit-title">每日明细</span>
         </div>
         <span class="muted" id="audit-count" style="font-size:11.5px;">共 0 天记录</span>
       </div>
@@ -399,9 +394,9 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
           <thead>
             <tr>
               <th>日期</th>
-              <th>交互轮次</th>
-              <th style="text-align:right;">未缓存输入</th>
-              <th style="text-align:right;">模型输出</th>
+              <th style="text-align:right;">交互轮次</th>
+              <th style="text-align:right;">输入 Tokens</th>
+              <th style="text-align:right;">输出 Tokens</th>
               <th style="text-align:right;">缓存读取</th>
               <th style="text-align:right;">当日总计 (Tokens)</th>
             </tr>
@@ -781,15 +776,12 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       // Model Statistics Mode: X-Axis represents different models!
       $('trend-range').style.display='none';
       $('legend').style.display='none';
-      text('trend-title',w('Token 使用趋势 · 模型统计','Token Usage Trend · Model Statistics'));
+      text('trend-title',selectedDate?(`${w('Token 使用趋势 · 模型统计','Token Usage Trend · Model Statistics')} (${selectedDate})`):w('Token 使用趋势 · 模型统计','Token Usage Trend · Model Statistics'));
       
       let targetDays=[];
       if(selectedDate){
-        $('trend-date-badge').hidden=false;
-        text('trend-date-text',`📅 ${selectedDate} ${zh()?'当天分布':'Day'}`);
         targetDays=(value.days||[]).filter(d=>d.date===selectedDate);
       }else{
-        $('trend-date-badge').hidden=true;
         const start=month(anchor,0),end=add(month(anchor,1),-1);
         targetDays=(value.days||[]).filter(d=>d.date>=start&&d.date<=end);
       }
@@ -911,13 +903,19 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     const tbody=$('audit-table-body');tbody.replaceChildren();
     for(const r of pageRows){
       const tr=node('tr','');
+      const dateTd=node('td','',r.date);
+      if(value.today&&r.date===value.today){
+        const tag=node('span','today-tag',w('今天','Today'));
+        dateTd.append(tag);
+      }
+      const totalTd=node('td','col-total',full(r.total));
       tr.append(
-        node('td','',r.date),
-        node('td','',full(r.turns)),
+        dateTd,
+        node('td','',full(r.turns)+w(' 轮',' turns')),
         node('td','',full(r.uncached)),
         node('td','',full(r.output)),
         node('td','',full(r.cacheRead)),
-        node('td','',full(r.total))
+        totalTd
       );
       tbody.append(tr);
     }
@@ -925,7 +923,6 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
   $('page-prev').addEventListener('click',()=>{if(auditPage>1){auditPage--;renderAuditTable();}});
   $('page-next').addEventListener('click',()=>{auditPage++;renderAuditTable();});
-  $('trend-date-clear').addEventListener('click',()=>{selectedDate=null;renderTrendSection();});
 
   function renderProfile(){
     const p=value?.profile||{name:'Antigravity User',email:'',avatar:'',initial:'A'};
@@ -1032,6 +1029,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
   for(const b of view.querySelectorAll('[data-trend]'))b.addEventListener('click',()=>{
     trendMode=b.dataset.trend;
+    selectedDate=null;
     for(const btn of view.querySelectorAll('[data-trend]'))btn.classList.toggle('active',btn.dataset.trend===trendMode);
     renderTrendSection();
   });
