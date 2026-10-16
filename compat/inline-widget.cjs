@@ -81,7 +81,7 @@ module.exports = function installAgPulseInlineWidget() {
     text('language-save-note',preferences.error?t('languageSaveFailed'):'');
     const zh=language.language==='zh-CN';
     text('usage-today-label',zh?'今日用量':'Today');text('usage-month-label',zh?'本月用量':'This month');
-    text('usage-open-label',zh?'查看用量统计':'View token usage');updateMenu?.localize();
+    text('usage-open-label',zh?'🖥️ 打开桌面审计大屏 (HUD)':'🖥️ Open Desktop HUD');updateMenu?.localize();
     updateGuide();
   }
   function stopDensityMotion(){
@@ -600,8 +600,15 @@ module.exports = function installAgPulseInlineWidget() {
         .usage-summary strong{font-size:20px;font-weight:550;letter-spacing:-.5px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums}.usage-unit{font-size:9px;letter-spacing:0;color:var(--pulse-muted)}
         #open-usage{align-items:center;min-height:34px;gap:12px;width:calc(100% + 12px);margin:5px -6px -3px;padding:7px 6px;border:0;border-radius:6px;background:transparent;color:var(--pulse-label);font-size:11px;text-align:left;line-height:20px}#open-usage:hover{background:var(--pulse-hover);color:var(--pulse-foreground)}#open-usage svg{width:14px;height:14px;color:var(--pulse-muted);flex:none}
       `;
-      usageDashboard=window.__agPulseUsageFactory({root,language,setMarkup,hostLabel:surface?.usageHostLabel||'Antigravity',guideDismissed:usageGuideDismissed,onDismissGuide:async()=>{const saved=await window.agPulseHost.setPreferences({usageGuideDismissed:true});if(saved?.usageGuideDismissed!==true)throw Error('Usage guide could not be saved');syncGuide(saved);},onLanguage:next=>preferences.choose(next),onRefresh:()=>refreshManually()});
-      $('open-usage').addEventListener('click',()=>{const trigger=root.querySelector('[data-card=cache]');hide();usageDashboard.open(data?.usage,trigger);});
+      $('open-usage').addEventListener('click',()=>{
+        hide();
+        if(window.agPulseHost?.openHUD){
+          window.agPulseHost.openHUD();
+        }else if(usageDashboard){
+          const trigger=root.querySelector('[data-card=cache]');
+          usageDashboard.open(data?.usage,trigger);
+        }
+      });
     }
     localize();
     render();refresh();

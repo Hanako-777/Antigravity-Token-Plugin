@@ -67,8 +67,18 @@ if (process.env.ANTIGRAVITY_SIDECAR_WEB_PORT) {
   app.api('/theme.css',()=>new Response(themeCss(),{contentType:'text/css'}),'GET');
   app.api('/api/metrics', data => metrics({ conversationId: data.conversationId || null, force: data.force === true || data.force === '1' }), 'GET');
   app.api('/api/integration', () => integration.health, 'GET');
-  app.api('/api/preferences',()=>preferences.snapshot(),'GET');
   app.api('/api/preferences',async data=>{try{return await preferences.set(data);}catch{return new Response(JSON.stringify({error:'Language preference could not be saved'}),{status:400,contentType:'application/json'});}},'POST');
+  app.api('/api/open-hud', async () => {
+    try {
+      const { spawn } = await import('node:child_process');
+      const desktopScript = join(HERE, '..', '..', 'desktop', 'usage_tracker.py');
+      const child = spawn('python', [desktopScript, '--show'], { detached: true, stdio: 'ignore', windowsHide: true });
+      child.unref();
+      return new Response(JSON.stringify({ ok: true }), { contentType: 'application/json' });
+    } catch (e) {
+      return new Response(JSON.stringify({ error: String(e) }), { status: 500, contentType: 'application/json' });
+    }
+  }, 'POST');
   app.run();
   integration.start();
   const shutdown=async()=>{

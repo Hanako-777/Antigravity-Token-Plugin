@@ -2,6 +2,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { request } from 'node:http';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { platformPaths } from './platform.mjs';
 import { createHash } from 'node:crypto';
 
@@ -118,6 +119,7 @@ function rendererBridge(binding) {
     getPreferences: () => call('preferences', {}),
     setPreferences: input => call('preferences', input),
     report: input => { void call('diagnostic', input); },
+    openHUD: () => call('openHUD', {}),
   };
 }
 
@@ -186,6 +188,17 @@ export class RuntimeUi {
       else if(input.type==='update'&&this.updater){
         if(!await this.enabled())throw Error('Plugin disabled');
         result=await this.updater.request(input.input);
+      }
+      else if (input.type === 'openHUD') {
+        try {
+          const { spawn } = await import('node:child_process');
+          const desktopScript = join(fileURLToPath(new URL('..', import.meta.url)), 'desktop', 'usage_tracker.py');
+          const child = spawn('python', [desktopScript, '--show'], { detached: true, stdio: 'ignore', windowsHide: true });
+          child.unref();
+          result = { ok: true };
+        } catch (e) {
+          result = { error: String(e) };
+        }
       }
       else if (input.type === 'preferences' && this.preferences) {
         const value=input.input;

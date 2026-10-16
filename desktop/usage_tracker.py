@@ -1747,4 +1747,8 @@ def build_codex_style_html(daily, total):
 if __name__ == "__main__":
     daily, total = analyze_usage()
     out = build_codex_style_html(daily, total)
-    print("SUCCESS:", out)
+    if "--open" in sys.argv or "--show" in sys.argv:
+        import os
+        os.startfile(out)
+    else:
+        print("SUCCESS:", out)

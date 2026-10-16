@@ -203,6 +203,9 @@ function refresh(force = false) {
 $('quota-group').addEventListener('change', event => { selectedGroup = event.target.value; localSet('ag-pulse-group',selectedGroup); render(); });
 $('refresh-button').addEventListener('click', refreshManually);
 $('language-toggle').addEventListener('click',()=>{void preferences.toggle();});
+$('hud-toggle')?.addEventListener('click', () => {
+  fetch('/api/open-hud', { method: 'POST' }).catch(() => {});
+});
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
 window.addEventListener('pagehide',()=>preferences.dispose());
 window.addEventListener('pageshow',event=>{if(event.persisted)preferences=connectPreferences();});
