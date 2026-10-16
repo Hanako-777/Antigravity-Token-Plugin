@@ -30,13 +30,13 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .profile-handle{font-size:12.5px;color:var(--pulse-muted);margin-top:3px;cursor:help;transition:color 0.15s ease}
     .profile-handle:hover{color:var(--pulse-accent)}
     
-    /* Codex 5-Metrics Hero Bar */
-    .codex-bar{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr 1.25fr 0.9fr 1fr;box-shadow:0 4px 16px var(--pulse-shadow);margin-bottom:2px}
-    .codex-col{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2px 6px;min-width:0}
+    /* Profile Hero Metrics Bar (4 Columns) */
+    .codex-bar{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:12px;padding:14px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;box-shadow:0 4px 16px var(--pulse-shadow);margin-bottom:2px}
+    .codex-col{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:2px 14px;min-width:0}
     .codex-col:not(:last-child){border-right:1px solid var(--pulse-separator)}
-    .codex-num{font-size:17.5px;font-weight:600;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap}
-    .codex-label{font-size:10.5px;color:var(--pulse-muted);margin-top:3px;white-space:nowrap}
-    .codex-sub{font-size:9.5px;opacity:0.75;margin-left:3px}
+    .codex-label{font-size:11.5px;color:var(--pulse-muted);margin-bottom:5px;white-space:nowrap}
+    .codex-num{font-size:21px;font-weight:650;letter-spacing:-.3px;color:var(--pulse-foreground);font-variant-numeric:tabular-nums;white-space:nowrap;display:flex;align-items:baseline;gap:5px}
+    .codex-unit{font-size:11px;font-weight:400;color:var(--pulse-muted)}
     
     /* Card Container Wrapper */
     .card-container{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:14px;padding:18px 20px 20px;box-shadow:0 4px 18px var(--pulse-shadow);flex-shrink:0}
@@ -219,27 +219,23 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
       <div class="profile-handle" id="profile-handle" title="">@user</div>
     </div>
 
-    <!-- Codex 5-Metrics Hero Bar (Original Order & Types) -->
+    <!-- Profile Hero Metrics Bar (4 Metrics: 今日用量, 本周用量, 本月用量, 累计用量) -->
     <section class="codex-bar">
       <div class="codex-col">
-        <div class="codex-num" id="codex-today">—</div>
-        <div class="codex-label" id="codex-today-label">今日实际消耗</div>
+        <div class="codex-label" id="codex-today-label">今日用量</div>
+        <div class="codex-num"><span id="codex-today">—</span> <span class="codex-unit">Token</span></div>
       </div>
       <div class="codex-col">
-        <div class="codex-num" id="codex-total">—</div>
-        <div class="codex-label" id="codex-total-label">累计 Token 数</div>
+        <div class="codex-label" id="codex-week-label">本周用量</div>
+        <div class="codex-num"><span id="codex-week">—</span> <span class="codex-unit">Token</span></div>
       </div>
       <div class="codex-col">
-        <div class="codex-num" id="codex-peak">—</div>
-        <div class="codex-label" id="codex-peak-label">单日使用峰值<span class="codex-sub" id="codex-peak-date"></span></div>
+        <div class="codex-label" id="codex-month-label">本月用量</div>
+        <div class="codex-num"><span id="codex-month">—</span> <span class="codex-unit">Token</span></div>
       </div>
       <div class="codex-col">
-        <div class="codex-num" id="codex-days">—</div>
-        <div class="codex-label" id="codex-days-label">活跃使用天数</div>
-      </div>
-      <div class="codex-col">
-        <div class="codex-num" id="codex-requests">—</div>
-        <div class="codex-label" id="codex-requests-label">累计交互轮次</div>
+        <div class="codex-label" id="codex-total-label">累计用量</div>
+        <div class="codex-num"><span id="codex-total">—</span> <span class="codex-unit">Token</span></div>
       </div>
     </section>
 
@@ -795,36 +791,29 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
         }
       }
       
-      const activeModels=[...modelStats.entries()].filter(([,st])=>st.total>0);
-      if(!activeModels.length){
-        plot.append(node('div','chart-empty',selectedDate?w(selectedDate+' 暂无模型消耗','No model usage on '+selectedDate):w('所选时段暂无模型用量记录','No model usage in this period')));
-        return;
-      }
-      
-      const max=Math.max(1,...activeModels.map(([,st])=>st.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
+      // Always show all models in fixed order on X-axis (never jump or disappear on date click)
+      const allModels=value.models.map(m=>[m,modelStats.get(m)||{total:0,uncached:0,cacheRead:0,cacheWrite:0,output:0,requests:0}]);
+      const max=Math.max(1,...allModels.map(([,st])=>st.total)),ceiling=max>1?Math.ceil(max/(10**Math.floor(Math.log10(max))))*10**Math.floor(Math.log10(max)):1;
       for(let i=0;i<=4;i++){
         const label=node('span','',compact(ceiling*i/4));label.style.bottom=(19+(246-19)*i/4)+'px';axis.append(label);
         const line=node('i','grid-line');line.style.bottom=(19+(246-19)*i/4)+'px';plot.append(line);
       }
       
-      for(const [i,[model,st]]of activeModels.entries()){
+      for(const [i,[model,st]]of allModels.entries()){
         const button=node('button','bar-column');button.type='button';
         const stack=node('div','stack');
         stack.style.animationDelay=(i*20)+'ms';
-        stack.style.width='36px';stack.style.maxWidth='42px';
+        stack.style.width='24px';stack.style.maxWidth='28px';
         
-        // Segments breakdown by token components: Uncached Input, Cache Read, Output
-        const components=[
-          {key:'uncached',label:w('未缓存输入','Uncached'),val:st.uncached,clr:'var(--pulse-accent)'},
-          {key:'cacheRead',label:w('缓存读取','Cache read'),val:st.cacheRead,clr:'var(--pulse-success)'},
-          {key:'output',label:w('模型输出','Output'),val:st.output,clr:'#f472b6'}
-        ];
-        for(const comp of components){
-          if(!comp.val)continue;
-          const bar=node('i','bar-segment'),h=comp.val/ceiling*227;
+        // Single solid bar matching 日走势 style using color(model) - no green, no split bars
+        if(st.total>0){
+          const bar=node('i','bar-segment'),h=st.total/ceiling*227;
+          bar.dataset.model=model;bar.setAttribute('aria-hidden','true');
+          bar.style.setProperty('--model-color',color(model));
           bar.style.height=h+'px';
-          bar.style.setProperty('--model-color',comp.clr);
           stack.append(bar);
+        }else{
+          stack.append(node('i','empty-bar'));
         }
         button.append(stack);
         button.append(node('span','x-label',modelName(model)));
@@ -943,18 +932,14 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
 
   function renderCodexBar(){
     if(!value)return;
-    text('codex-total',compact(value.totalTokens??0));
     text('codex-today',compact(value.todayTokens??0));
-    let peakVal=0,peakDate='';
-    for(const d of value.days||[]){
-      const t=Object.values(d.models||{}).reduce((sum,m)=>sum+(m.total||0),0);
-      if(t>peakVal){peakVal=t;peakDate=d.date;}
-    }
-    text('codex-peak',compact(peakVal));
-    text('codex-peak-date',peakDate?` (${peakDate.slice(5)})`:'');
-    const activeDays=(value.days||[]).filter(d=>Object.values(d.models||{}).reduce((s,m)=>s+(m.total||0),0)>0).length;
-    text('codex-days',`${activeDays} ${w('天','days')}`);
-    text('codex-requests',`${full(value.requests)} ${w('轮','turns')}`);
+    text('codex-week',compact(value.weekTokens??0));
+    text('codex-month',compact(value.monthTokens??0));
+    text('codex-total',compact(value.totalTokens??0));
+    text('codex-today-label',w('今日用量','Today'));
+    text('codex-week-label',w('本周用量','This Week'));
+    text('codex-month-label',w('本月用量','This Month'));
+    text('codex-total-label',w('累计用量','Total'));
   }
 
   function render(){
