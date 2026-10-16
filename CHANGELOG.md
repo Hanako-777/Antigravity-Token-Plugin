@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.8.7 patch — 2026-10-15
+## 1.0.1 — 2026-10-17
+
+- 账户识别升级：优先通过 Antigravity Language Server 官方 `GetUserStatus` RPC 解析用户真实 Google 昵称、邮箱句柄（如 `@username`）以及高清头像（支持 Data URI 及网络外链），并在未登录或离线时自动识别本地操作系统用户名。
+- 修复无命令行登录凭据（`oauth_creds.json`）时在笔记本桌面端显示为 `Antigravity User` 的问题。
+- 统一用量统计与看板中的用户信息展示管道，确保桌面端与 IDE 端均能正确读取账户资料。
+
+## 1.0.0 — 2026-10-16
 
 - Show measured download bytes and percentage in App updates. Use animated phase feedback for checking, verification, extraction, backup and installation; settle smoothly on completion and follow the host theme. A completed check does not animate backwards into a new download, and only the glyph rotates inside its stable icon surface.
 - Keep optional worker progress separate from the verified final result. Bound/allowlist progress events, prevent backwards byte counts and keep unavailable progress consumers from failing an installation.
