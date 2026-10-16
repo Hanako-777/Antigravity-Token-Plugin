@@ -42,4 +42,3 @@ dl{margin:0}dl>div{display:flex;justify-content:space-between;align-items:baseli
 @media(prefers-reduced-motion:reduce){.icon-button,.metric-chip{transition:none}#refresh-button[aria-busy=true] .icon{animation:none;opacity:.65}}
 
 #transcript-details{margin-top:12px;border-top:1px solid var(--pulse-separator);padding-top:10px}#transcript-details summary{cursor:pointer;font-size:11px;color:var(--pulse-label)}#transcript-total{float:right;margin-left:8px;font-variant-numeric:tabular-nums;color:var(--pulse-foreground);font-size:10px}
-#cache-read{color:var(--pulse-morandi-terracotta,#C4837C);font-weight:600}#cache-miss{color:var(--pulse-morandi-blue,#8FBADD);font-weight:600}#cache-output{color:var(--pulse-morandi-slate,#54748B);font-weight:600}
