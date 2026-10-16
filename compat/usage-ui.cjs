@@ -7,7 +7,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
   const css=document.createElement('style');css.textContent=`
     :host{display:block;height:100%;color:var(--pulse-foreground);font:13px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif;font-variant-numeric:tabular-nums}
     *{box-sizing:border-box}button,select{font:inherit;color:inherit}button{cursor:pointer}button,select{border:1px solid var(--pulse-border);background:transparent;border-radius:7px}button{transition:background 140ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}button:active{transform:scale(.97)}button:focus-visible,select:focus-visible{outline:2px solid var(--pulse-accent);outline-offset:3px}button[disabled]{opacity:.35;cursor:default}
-    .page{height:100%;max-height:none;overflow-y:auto;overflow-x:hidden;padding:22px 28px 30px;display:flex;flex-direction:column;gap:18px;background:var(--pulse-background);scrollbar-gutter:stable}
+    .page{height:100%;max-height:none;overflow-y:auto;overflow-x:hidden;padding:22px 28px 30px;display:flex;flex-direction:column;gap:18px;background:var(--pulse-background);scrollbar-gutter:stable}.page > *{flex-shrink:0}
     
     /* Top Header Navbar */
     .top{display:flex;justify-content:space-between;align-items:center}
@@ -39,7 +39,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     .codex-sub{font-size:9.5px;opacity:0.75;margin-left:3px}
     
     /* Card Container Wrapper */
-    .card-container{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:14px;padding:18px 20px 20px;box-shadow:0 4px 18px var(--pulse-shadow)}
+    .card-container{background:var(--pulse-card);border:1px solid var(--pulse-border);border-radius:14px;padding:18px 20px 20px;box-shadow:0 4px 18px var(--pulse-shadow);flex-shrink:0}
     
     /* Section Headers */
     .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -381,7 +381,7 @@ module.exports = function createUsageDashboard({root,language,setMarkup,hostLabe
     </section>
 
     <!-- Section 4: 每日消费审计明细 (Table with 10-day Pagination) -->
-    <section class="card-container" id="section-audit" style="padding:0; overflow:hidden;">
+    <section class="card-container" id="section-audit" style="padding:0; overflow:hidden; flex-shrink:0;">
       <div style="padding: 13px 18px; border-bottom: 1px solid var(--pulse-separator); display:flex; justify-content:space-between; align-items:center;">
         <div class="section-title">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
