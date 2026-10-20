@@ -14,6 +14,73 @@ module.exports = function installAgPulseInlineWidget() {
   const t=language.t;
   window.__agPulseInlineInstalled=true;
   report('boot',{hostFound:true});
+  const userBubbleStyle=document.createElement('style');
+  userBubbleStyle.id='ag-pulse-user-bubble-theme';
+  userBubbleStyle.textContent=`
+    [data-testid="user-input-step"] .bg-card-border {
+      background: transparent !important;
+      padding: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: flex !important;
+      justify-content: flex-end !important;
+    }
+    [data-testid="user-input-step"] .bg-card {
+      border: none !important;
+      border-radius: 16px !important;
+      padding: 8px 14px !important;
+      max-width: 85% !important;
+      margin-left: auto !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+      transition: background-color 0.2s ease, color 0.2s ease !important;
+    }
+    html:not(.dark) [data-testid="user-input-step"] .bg-card,
+    [data-theme="light"] [data-testid="user-input-step"] .bg-card,
+    [data-color-mode="light"] [data-testid="user-input-step"] .bg-card {
+      background-color: #F0F0F0 !important;
+      color: #1f2328 !important;
+    }
+    html:not(.dark) [data-testid="user-input-step"] [data-quotable="true"],
+    [data-theme="light"] [data-testid="user-input-step"] [data-quotable="true"],
+    [data-color-mode="light"] [data-testid="user-input-step"] [data-quotable="true"] {
+      color: #1f2328 !important;
+    }
+    html:not(.dark) [data-testid="user-input-step"] svg {
+      color: #1f2328 !important;
+    }
+    .dark [data-testid="user-input-step"] .bg-card,
+    [data-theme="dark"] [data-testid="user-input-step"] .bg-card,
+    [data-color-mode="dark"] [data-testid="user-input-step"] .bg-card,
+    [data-vscode-theme-kind="vscode-dark"] [data-testid="user-input-step"] .bg-card {
+      background-color: #D1D1D1 !important;
+      color: #18191c !important;
+    }
+    .dark [data-testid="user-input-step"] [data-quotable="true"],
+    [data-theme="dark"] [data-testid="user-input-step"] [data-quotable="true"],
+    [data-color-mode="dark"] [data-testid="user-input-step"] [data-quotable="true"],
+    [data-vscode-theme-kind="vscode-dark"] [data-testid="user-input-step"] [data-quotable="true"] {
+      color: #18191c !important;
+    }
+    .dark [data-testid="user-input-step"] svg,
+    [data-theme="dark"] [data-testid="user-input-step"] svg {
+      color: #18191c !important;
+    }
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] .bg-card {
+        background-color: #D1D1D1 !important;
+        color: #18191c !important;
+      }
+      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] [data-quotable="true"] {
+        color: #18191c !important;
+      }
+      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] svg {
+        color: #18191c !important;
+      }
+    }
+  `;
+  if(!document.getElementById('ag-pulse-user-bubble-theme')){
+    (document.head||document.documentElement).appendChild(userBubbleStyle);
+  }
   const ID='ag-pulse-status-bar';
   // Host-specific discovery stays outside the shared widget. The IDE has no
   // /c/<id> URL, and must never inherit the desktop's conversation fallback.
@@ -803,7 +870,7 @@ module.exports = function installAgPulseInlineWidget() {
   const timerId=setInterval(()=>{mount();fit();tick();position();if(conversationId()!==lastConversation||Date.now()-lastFetch>(document.hidden?10000:2200))refresh();},1000);
   window.__agPulseDispose=()=>{
     disposed=true;requestEpoch++;pending=false;refreshRequest=null;stopDensityMotion();densityFrame=null;densityProbe=null;
-    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();
+    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();userBubbleStyle?.remove();
     document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onPointer);
     document.removeEventListener('scroll',scheduleLayout,true);window.removeEventListener('resize',scheduleLayout);
     densityMedia.removeEventListener('change',stopDensityMotion);
