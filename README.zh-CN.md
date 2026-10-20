@@ -9,7 +9,7 @@
 模型选择旁直观显示生成速率、缓存命中率和上下文占用；悬停展开全新大字号精简详情卡；更有独立的 Codex 风格全功能 Token 用量分析中心。<br>
 极简常驻，沉浸交互，全面掌控你的 AI Token 资产。
 
-[![Version](https://img.shields.io/badge/version-1.0.2-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.3-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
 [![Original Author](https://img.shields.io/badge/original%20author-YOU--SHOULD--KNOW--ME-ff79c6?style=flat-square&labelColor=252936)](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)

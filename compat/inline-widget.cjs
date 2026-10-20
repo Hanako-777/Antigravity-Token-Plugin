@@ -81,6 +81,351 @@ module.exports = function installAgPulseInlineWidget() {
   if(!document.getElementById('ag-pulse-user-bubble-theme')){
     (document.head||document.documentElement).appendChild(userBubbleStyle);
   }
+
+  // Fisheye Timeline Navigation Scrubber
+  const timelineStyle = document.createElement('style');
+  timelineStyle.id = 'ag-pulse-timeline-style';
+  timelineStyle.textContent = `
+    #ag-pulse-timeline {
+      position: fixed;
+      z-index: 995;
+      user-select: none;
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 8px 16px 8px 6px;
+      touch-action: none;
+      background: transparent;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .ag-pulse-track {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .ag-pulse-tick {
+      height: 2px !important;
+      width: 8px;
+      border-radius: 1px;
+      transform-origin: left center;
+      position: relative;
+      transition: width 0.1s ease-out, background-color 0.1s ease-out, opacity 0.1s ease-out;
+      cursor: pointer;
+      box-shadow: none !important;
+    }
+    html:not(.dark) .ag-pulse-tick {
+      background-color: rgba(0, 0, 0, 0.26);
+    }
+    .dark .ag-pulse-tick,
+    [data-theme="dark"] .ag-pulse-tick {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    /* Current viewport focused turn */
+    html:not(.dark) .ag-pulse-tick.active-viewport {
+      width: 14px;
+      background-color: #007acc !important;
+    }
+    .dark .ag-pulse-tick.active-viewport,
+    [data-theme="dark"] .ag-pulse-tick.active-viewport {
+      width: 14px;
+      background-color: #007acc !important;
+    }
+    /* Hovered tick: only length & clean color change, NO thickness, NO glow */
+    html:not(.dark) .ag-pulse-tick.hovered {
+      background-color: #111111 !important;
+    }
+    .dark .ag-pulse-tick.hovered,
+    [data-theme="dark"] .ag-pulse-tick.hovered {
+      background-color: #ffffff !important;
+    }
+    /* Bookmark small dot on right end */
+    .ag-pulse-tick.bookmarked::after {
+      content: '';
+      position: absolute;
+      left: calc(100% + 4px);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3.5px;
+      height: 3.5px;
+      border-radius: 50%;
+      background-color: #007acc;
+      pointer-events: none;
+    }
+    /* Popover: Clean, no emoji, matches user design */
+    #ag-pulse-timeline-popover {
+      position: fixed;
+      width: 320px;
+      max-width: calc(100vw - 320px);
+      border-radius: 12px;
+      padding: 12px 14px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%) translateX(-4px);
+      transition: opacity 0.12s ease, transform 0.12s ease, top 0.05s ease-out;
+      font-family: inherit;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+    #ag-pulse-timeline-popover.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(-50%) translateX(0);
+    }
+    .dark #ag-pulse-timeline-popover,
+    [data-theme="dark"] #ag-pulse-timeline-popover {
+      background: #22242a;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+    html:not(.dark) #ag-pulse-timeline-popover,
+    [data-theme="light"] #ag-pulse-timeline-popover {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      color: #111827;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    .ag-popover-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .ag-popover-prompt-title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .ag-popover-bookmark-btn {
+      flex: none;
+      background: transparent;
+      border: none;
+      padding: 2px;
+      cursor: pointer;
+      color: #8c96aa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: color 0.12s ease, transform 0.1s ease;
+    }
+    .ag-popover-bookmark-btn:hover {
+      color: #007acc;
+      transform: scale(1.1);
+    }
+    .ag-popover-bookmark-btn.active {
+      color: #007acc;
+    }
+    .ag-popover-ai-text {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #8c96aa;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  `;
+  if (!document.getElementById('ag-pulse-timeline-style')) {
+    (document.head || document.documentElement).appendChild(timelineStyle);
+  }
+
+  let timeline = document.getElementById('ag-pulse-timeline');
+  let popover = document.getElementById('ag-pulse-timeline-popover');
+  if (!timeline) {
+    timeline = document.createElement('div');
+    timeline.id = 'ag-pulse-timeline';
+    const track = document.createElement('div');
+    track.className = 'ag-pulse-track';
+    timeline.appendChild(track);
+    document.body.appendChild(timeline);
+  }
+  if (!popover) {
+    popover = document.createElement('div');
+    popover.id = 'ag-pulse-timeline-popover';
+    document.body.appendChild(popover);
+  }
+  const track = timeline.querySelector('.ag-pulse-track');
+
+  const bookmarkedTurns = new Set();
+  let lastTurnCount = 0;
+
+  function updateTimeline() {
+    if (disposed) return;
+    const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
+    if (stepNodes.length <= 1) {
+      timeline.style.display = 'none';
+      popover.classList.remove('visible');
+      lastTurnCount = 0;
+      return;
+    }
+    timeline.style.display = 'flex';
+
+    const chatArea = stepNodes[0].closest('.overflow-y-auto') || document.body;
+    const chatRect = chatArea.getBoundingClientRect();
+    timeline.style.left = Math.round(chatRect.left + 8) + 'px';
+    timeline.style.top = '50%';
+    timeline.style.transform = 'translateY(-50%)';
+
+    const availableH = Math.max(120, window.innerHeight * 0.75);
+    const gap = Math.max(2, Math.min(6, (availableH - stepNodes.length * 2) / Math.max(1, stepNodes.length - 1)));
+    track.style.gap = gap.toFixed(1) + 'px';
+
+    if (stepNodes.length !== lastTurnCount) {
+      lastTurnCount = stepNodes.length;
+      track.innerHTML = '';
+      stepNodes.forEach((step, idx) => {
+        const tick = document.createElement('div');
+        tick.className = 'ag-pulse-tick';
+        tick.dataset.turn = idx;
+        if (bookmarkedTurns.has(idx)) tick.classList.add('bookmarked');
+
+        const userText = (step.querySelector('[data-quotable="true"]')?.textContent || step.textContent || '').trim();
+        let aiText = '';
+        let next = step.closest('[role="article"]')?.nextElementSibling || step.parentElement?.nextElementSibling;
+        while (next && !aiText) {
+          if (next.querySelector('[data-testid="user-input-step"]')) break;
+          const prose = next.querySelector('.prose, [class*="markdown"], p');
+          if (prose) {
+            aiText = prose.textContent.trim();
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+        tick.dataset.userText = userText;
+        tick.dataset.aiText = aiText;
+
+        tick.addEventListener('click', (e) => {
+          e.stopPropagation();
+          step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        track.appendChild(tick);
+      });
+    }
+
+    detectActiveViewport();
+  }
+
+  function detectActiveViewport() {
+    const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
+    const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
+    if (!stepNodes.length || !ticks.length) return;
+
+    const vCenter = window.innerHeight / 2;
+    let closestIdx = 0;
+    let minDiff = Infinity;
+
+    stepNodes.forEach((node, i) => {
+      const r = node.getBoundingClientRect();
+      const nodeCenter = r.top + r.height / 2;
+      const diff = Math.abs(vCenter - nodeCenter);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = i;
+      }
+    });
+
+    ticks.forEach((t, i) => {
+      t.classList.toggle('active-viewport', i === closestIdx);
+    });
+  }
+
+  if (!timeline.__agFisheyeBound) {
+    timeline.__agFisheyeBound = true;
+    timeline.addEventListener('pointermove', (e) => {
+      const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
+      if (!ticks.length) return;
+
+      const cursorY = e.clientY;
+      const R = 45; // Focused radius
+      let nearestTick = null;
+      let minDistance = Infinity;
+
+      ticks.forEach(tick => {
+        const rect = tick.getBoundingClientRect();
+        const tickCenterY = rect.top + rect.height / 2;
+        const dist = Math.abs(cursorY - tickCenterY);
+
+        if (dist < minDistance) {
+          minDistance = dist;
+          nearestTick = tick;
+        }
+
+        if (dist < R) {
+          const ratio = Math.cos((dist / R) * (Math.PI / 2));
+          const width = 8 + 16 * ratio;
+          tick.style.width = width.toFixed(1) + 'px';
+          tick.style.opacity = (0.35 + 0.65 * ratio).toFixed(2);
+          tick.classList.toggle('hovered', dist < 8);
+        } else {
+          tick.style.width = tick.classList.contains('active-viewport') ? '14px' : '8px';
+          tick.style.opacity = '0.35';
+          tick.classList.remove('hovered');
+        }
+      });
+
+      if (nearestTick && minDistance < 28) {
+        const tIdx = parseInt(nearestTick.dataset.turn, 10);
+        const nRect = nearestTick.getBoundingClientRect();
+        const isBookmarked = bookmarkedTurns.has(tIdx);
+        const rawUserText = nearestTick.dataset.userText || '';
+        const quoteText = '“' + (rawUserText.length > 50 ? rawUserText.slice(0, 50) + '...' : rawUserText) + '”';
+
+        popover.innerHTML = `
+          <div class="ag-popover-top-row">
+            <div class="ag-popover-prompt-title">${quoteText}</div>
+            <button type="button" class="ag-popover-bookmark-btn ${isBookmarked ? 'active' : ''}" id="ag-btn-bookmark" title="标记此轮次">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </button>
+          </div>
+          ${nearestTick.dataset.aiText ? '<div class="ag-popover-ai-text">' + nearestTick.dataset.aiText + '</div>' : ''}
+        `;
+
+        const bmBtn = popover.querySelector('#ag-btn-bookmark');
+        bmBtn.onclick = (be) => {
+          be.stopPropagation();
+          if (bookmarkedTurns.has(tIdx)) {
+            bookmarkedTurns.delete(tIdx);
+            nearestTick.classList.remove('bookmarked');
+          } else {
+            bookmarkedTurns.add(tIdx);
+            nearestTick.classList.add('bookmarked');
+          }
+          const nowBm = bookmarkedTurns.has(tIdx);
+          bmBtn.classList.toggle('active', nowBm);
+          bmBtn.querySelector('svg').setAttribute('fill', nowBm ? 'currentColor' : 'none');
+        };
+
+        popover.style.left = (nRect.right + 14) + 'px';
+        popover.style.top = nRect.top + 'px';
+        popover.classList.add('visible');
+      } else {
+        popover.classList.remove('visible');
+      }
+    });
+
+    timeline.addEventListener('pointerleave', () => {
+      const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
+      ticks.forEach(tick => {
+        tick.style.width = tick.classList.contains('active-viewport') ? '14px' : '8px';
+        tick.style.opacity = '0.35';
+        tick.classList.remove('hovered');
+      });
+      popover.classList.remove('visible');
+    });
+
+    window.addEventListener('scroll', detectActiveViewport, true);
+  }
   const ID='ag-pulse-status-bar';
   // Host-specific discovery stays outside the shared widget. The IDE has no
   // /c/<id> URL, and must never inherit the desktop's conversation fallback.
@@ -132,7 +477,7 @@ module.exports = function installAgPulseInlineWidget() {
     const id=conversationId();
     if(id===lastConversation)return false;
     lastConversation=id;requestEpoch++;pending=false;refreshRequest=null;lastFetch=0;
-    stopDensityMotion();densityFrame=null;densityProbe=null;
+    stopDensityMotion();densityFrame=null;densityProbe=null;lastTurnCount=0;updateTimeline();
     manualRequest=null;refreshBusy(false);
     data={connection:'offline',groups:[],speed:null};group=null;hide();
     // Navigation has its own refresh budget. A request from the old composer
@@ -350,7 +695,7 @@ module.exports = function installAgPulseInlineWidget() {
   }
   function scheduleLayout(){
     if(layoutFrame!==null)return;
-    layoutFrame=requestAnimationFrame(()=>{layoutFrame=null;mount();fit();position();});
+    layoutFrame=requestAnimationFrame(()=>{layoutFrame=null;mount();fit();position();updateTimeline();});
   }
   function observeComposer(){
     resizeObserver?.disconnect();
@@ -544,7 +889,7 @@ module.exports = function installAgPulseInlineWidget() {
     }
     const found=findComposer();
     if(!found){
-      stopDensityMotion();densityFrame=null;densityProbe=null;composer=null;resizeObserver?.disconnect();
+      stopDensityMotion();densityFrame=null;densityProbe=null;lastTurnCount=0;updateTimeline();composer=null;resizeObserver?.disconnect();
       if(node){
         hide();usageDashboard?.dispose();usageDashboard=null;updateMenu?.dispose();updateMenu=null;themeController?.dispose();themeController=null;
         node.remove();node=null;root=null;
@@ -867,10 +1212,10 @@ module.exports = function installAgPulseInlineWidget() {
   document.addEventListener('keydown',onKey);document.addEventListener('pointerdown',onPointer);
   window.addEventListener('resize',scheduleLayout);document.addEventListener('scroll',scheduleLayout,true);
   densityMedia.addEventListener('change',stopDensityMotion);
-  const timerId=setInterval(()=>{mount();fit();tick();position();if(conversationId()!==lastConversation||Date.now()-lastFetch>(document.hidden?10000:2200))refresh();},1000);
+  const timerId=setInterval(()=>{mount();fit();tick();position();updateTimeline();if(conversationId()!==lastConversation||Date.now()-lastFetch>(document.hidden?10000:2200))refresh();},1000);
   window.__agPulseDispose=()=>{
     disposed=true;requestEpoch++;pending=false;refreshRequest=null;stopDensityMotion();densityFrame=null;densityProbe=null;
-    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();userBubbleStyle?.remove();
+    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();userBubbleStyle?.remove();timelineStyle?.remove();timeline?.remove();popover?.remove();
     document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onPointer);
     document.removeEventListener('scroll',scheduleLayout,true);window.removeEventListener('resize',scheduleLayout);
     densityMedia.removeEventListener('change',stopDensityMotion);
