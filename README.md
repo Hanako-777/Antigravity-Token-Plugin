@@ -2,12 +2,12 @@
 
 <img src="docs/assets/hero.png" width="100%" alt="Antigravity Token Plugin: Generation speed, cache, context, and full-featured token usage dashboard.">
 
-# Antigravity Token Plugin
+# Antigravity PowerToys
 
-### Real-Time AI Generation Speed, Cache Hit Rate, Quota Windows, and Full-Featured Token Analytics Dashboard
+### All-in-One Workspace Powerpack for Google Antigravity: Fisheye Conversation Timeline, Local File Context Menu, Real-Time Token Analytics HUD, and Modern Chat UI Enhancements
 
-Token throughput, cache hits, and context usage right beside the model selector. Hover to expand refined detail popovers with clean typography and inline progress bars; explore historical consumption trends with a dedicated Codex-style token usage dashboard.<br>
-Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
+An all-in-one productivity powerpack seamlessly integrating usage analytics, conversation timeline scrubbing, local file navigation, and UI aesthetics for Google Antigravity. Glide through long conversation turns with the mountain-peak fisheye minimap; reveal and open local file links directly in your operating system's native tools; monitor token throughput and quota reset countdowns inline; or dive into a dedicated Codex-style Token Analytics Dashboard.<br>
+Unobtrusive by default. Rich, actionable workspace power at your fingertips.
 
 [![Version](https://img.shields.io/badge/version-1.0.4-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
 [![Original Author](https://img.shields.io/badge/original%20author-YOU--SHOULD--KNOW--ME-ff79c6?style=flat-square&labelColor=252936)](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
@@ -54,14 +54,34 @@ Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 
 ## Key Highlights
 
-### 1. Refined Hover Detail Popovers & Typography
+### 1. Fisheye Conversation Minimap & Scrubber
+- **Mountain-Peak Fisheye Expansion**: Conversation turns are mapped as discrete ticks on the left rail of the chat view. Moving near them creates a sharp, natural mountain peak expansion (base 6px to 26px peak) instead of a chaotic wave.
+- **Strict Single-Line Highlight**: Only the single closest tick to your cursor changes color (crisp `#ffffff` in Dark mode, `#111111` in Light mode). All other lines maintain their original palette without color bleed.
+- **Pixel-Grid Snapping**: Automatically detects `window.devicePixelRatio` and locks every tick to physical device pixel rows, completely eliminating blurry or "one thicker, one thinner" anti-aliasing artifacts on fractional DPI displays.
+- **Fixed-Distance Preview Popover**: The floating preview card is rock-solid anchored at an exact 38px horizontal distance from the scrubber rail. It never jitters or jumps as ticks expand, highlighting quoted user turns and assistant summaries.
+- **Milestone Turn Bookmarks**: Click the bookmark icon in any turn preview to add a clean monochrome dot `·` to the timeline rail, making long chat navigation effortless.
+- **Instant Snap-Back**: Moving onto the preview card or leaving the rail instantly snaps all ticks back to the base 6px length.
+
+### 2. Local File Context Menu
+- **Break Free from the Side Pane**: Right-click any local file hyperlink generated in model responses for a native contextual popup menu.
+- **Reveal in File Explorer**: Instantly open Windows Explorer (or macOS Finder / Linux file manager) with the target file highlighted.
+- **Open in Default Application**: Launch the file directly in your preferred system editor (VS Code, external IDEs, image viewers, etc.).
+- **Open With...**: Trigger the system application selector dialog for flexible tool switching.
+- **Quick Preview**: View the first 200 lines of file contents in a smooth popover without opening external heavyweight software.
+
+### 3. Borderless Clean Chat Bubbles
+- **Modern Borderless Styling**: Clean, frameless layout adapting dynamically to Dark and Light modes.
+- **High-Contrast Readability**: Deep Morandi neutral `#222222` with pure white text in dark mode, matching the composer seamlessly; soft `#F0F0F0` in light mode.
+- **Clean Message Separation**: Preserves assistant markdown typography while clearly delineating user inputs.
+
+### 4. Refined Hover Detail Popovers & Typography
 - **Larger, Legible Typography**: Base font sizes upgraded to 12.5px ~ 13.5px for crisp readability without squinting.
 - **Inline Progress Bars**: Context usage bars now sit directly inline with the percentage values, eliminating unnecessary extra lines.
 - **Top-Right Quota Group Selector**: Switched the `Gemini ▾` / `Claude/GPT ▾` selector and refresh button into the card's header, maximizing usable space.
 - **Merged Reset Countdown**: Reset times and live countdowns are combined into a clean single line: `Reset Time 10/17 01:23 (02:14:04)`.
 
-### 2. Full-Featured Token Analytics Dashboard (HUD)
-- **Profile Header**: Displays your avatar, nickname, and handle (with hover reveal for masked email).
+### 5. Full-Featured Token Analytics Dashboard (HUD)
+- **Profile Header**: Displays your avatar, nickname, and handle via live `GetUserStatus` RPC (with hover reveal for masked email).
 - **Codex-Style Hero Metrics Bar**: Today, Weekly, Monthly, and Total cumulative usage prominently displayed with centered numbers and left-aligned labels.
 - **Dual Heatmap Contribution Grids**:
   - **Annual Daily Heatmap**: 7×53 GitHub-style calendar grid with date hover popups and single-day selection.
@@ -72,7 +92,7 @@ Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 - **10-Day Paginated Daily Audit Table**: Detailed historical audit logs broken down by model and day, complete with expandable sub-rows and pagination.
 - **One-Click Update Checker**: Directly queries this repository's releases for updates, offering one-click upgrades and hot reload.
 
-### 3. Smart Session Awareness & Privacy
+### 6. Smart Session Awareness & Privacy
 - **Subagent-Aware**: Child agents get their own independent throughput, cache rate, and context metrics in their composer.
 - **Non-Intrusive Hover Transitions**: 250ms anti-jitter delay on first hover; instantaneous switching between metrics once active; closes 350ms after leaving.
 - **Theme Adaptive**: Harmonizes with light/dark modes and custom accent colors automatically.

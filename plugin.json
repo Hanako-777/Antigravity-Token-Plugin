@@ -1,7 +1,7 @@
 {
   "name": "antigravity-pulse",
-  "display_name": "Antigravity Token Plugin",
-  "description": "Antigravity Inline Widget & Desktop HUD Token Tracker with Morandi styling and quota monitoring.",
+  "display_name": "Antigravity PowerToys",
+  "description": "All-in-One Powerpack for Antigravity: Token Analytics HUD, Fisheye Conversation Timeline, Local File Context Menu, and Modern Chat UI Enhancements.",
   "version": "1.0.4",
   "logo": "assets/logo.svg"
 }

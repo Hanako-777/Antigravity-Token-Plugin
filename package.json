@@ -1,8 +1,8 @@
 {
-  "name": "antigrative-dashboard",
-  "version": "0.8.7",
+  "name": "antigravity-powertoys",
+  "version": "1.0.4",
   "private": true,
-  "description": "Compact Antigravity token throughput and quota widget",
+  "description": "All-in-One productivity powerpack for Antigravity: token analytics HUD, fisheye conversation timeline, local file context menu, and chat UI refinements",
   "license": "MIT",
   "scripts": {
     "test": "node --test sidecars/panel/tests/*.test.mjs cli/tests/*.test.mjs",
