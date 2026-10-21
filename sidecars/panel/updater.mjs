@@ -62,7 +62,10 @@ export class AppUpdater {
 
       // 1. Check GitHub Releases
       try {
-        const res = await fetch('https://api.github.com/repos/Hanako-777/Antigravity-Token-Plugin/releases/latest', { headers });
+        const res = await fetch('https://api.github.com/repos/Hanako-777/Antigravity-Token-Plugin/releases/latest', { 
+          headers, 
+          signal: AbortSignal.timeout(4000) 
+        });
         if (res.ok) {
           const rel = await res.json();
           if (rel && rel.tag_name) {
@@ -75,10 +78,13 @@ export class AppUpdater {
         }
       } catch {}
 
-      // 2. If no release tag found, check plugin.json in repository main branch
+      // 2. Check GitHub Contents API
       if (!remoteVersion) {
         try {
-          const res = await fetch('https://api.github.com/repos/Hanako-777/Antigravity-Token-Plugin/contents/plugin.json', { headers });
+          const res = await fetch('https://api.github.com/repos/Hanako-777/Antigravity-Token-Plugin/contents/plugin.json', { 
+            headers, 
+            signal: AbortSignal.timeout(4000) 
+          });
           if (res.ok) {
             const data = await res.json();
             if (data?.content) {
@@ -88,19 +94,43 @@ export class AppUpdater {
             }
           }
         } catch {}
-
-        try {
-          const resCommit = await fetch('https://api.github.com/repos/Hanako-777/Antigravity-Token-Plugin/commits?per_page=1', { headers });
-          if (resCommit.ok) {
-            const commits = await resCommit.json();
-            if (commits?.[0]?.commit?.message) {
-              notes = commits[0].commit.message;
-            }
-          }
-        } catch {}
       }
 
-      remoteVersion = remoteVersion || currentVersion;
+      // 3. Fallback to Fast CDN mirrors if GitHub API is unreachable / rate-limited (especially in CN)
+      if (!remoteVersion) {
+        const mirrors = [
+          'https://fastly.jsdelivr.net/gh/Hanako-777/Antigravity-Token-Plugin@main/plugin.json',
+          'https://ghproxy.net/https://raw.githubusercontent.com/Hanako-777/Antigravity-Token-Plugin/main/plugin.json',
+          'https://raw.githubusercontent.com/Hanako-777/Antigravity-Token-Plugin/main/plugin.json'
+        ];
+        for (const mirrorUrl of mirrors) {
+          try {
+            const mRes = await fetch(mirrorUrl, { 
+              headers: { 'User-Agent': 'Antigravity-Token-Plugin-Updater' },
+              signal: AbortSignal.timeout(4000)
+            });
+            if (mRes.ok) {
+              const parsed = await mRes.json();
+              if (parsed?.version) {
+                remoteVersion = parsed.version;
+                break;
+              }
+            }
+          } catch {}
+        }
+      }
+
+      // If remote version still cannot be resolved after trying all endpoints, report network error
+      if (!remoteVersion) {
+        this.state = {
+          state: 'error',
+          host: 'app',
+          currentVersion,
+          error: 'network',
+          progress: { phase: 'check' }
+        };
+        return this.publicState();
+      }
 
       if (compareVersions(remoteVersion, currentVersion) > 0) {
         this.state = {
@@ -136,13 +166,32 @@ export class AppUpdater {
   async apply() {
     this.state = { ...this.state, state: 'installing', progress: { phase: 'download', received: 0, total: 0 } };
     try {
-      const url = this.state.downloadUrl || 'https://github.com/Hanako-777/Antigravity-Token-Plugin/archive/refs/heads/main.zip';
-      const tempZip = join(tmpdir(), `antigravity-pulse-update-${Date.now()}.zip`);
+      const candidateUrls = [
+        this.state.downloadUrl,
+        'https://ghproxy.net/https://github.com/Hanako-777/Antigravity-Token-Plugin/archive/refs/heads/main.zip',
+        'https://github.com/Hanako-777/Antigravity-Token-Plugin/archive/refs/heads/main.zip'
+      ].filter(Boolean);
 
-      const res = await fetch(url, { headers: { 'User-Agent': 'Antigravity-Token-Plugin-Updater' } });
-      if (!res.ok) throw new Error('Download failed: ' + res.status);
-      const arrayBuffer = await res.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
+      const tempZip = join(tmpdir(), `antigravity-pulse-update-${Date.now()}.zip`);
+      let buffer = null;
+
+      for (const url of candidateUrls) {
+        try {
+          const res = await fetch(url, { 
+            headers: { 'User-Agent': 'Antigravity-Token-Plugin-Updater' },
+            signal: AbortSignal.timeout(15000)
+          });
+          if (res.ok) {
+            const ab = await res.arrayBuffer();
+            if (ab && ab.byteLength > 1000) {
+              buffer = Buffer.from(ab);
+              break;
+            }
+          }
+        } catch {}
+      }
+
+      if (!buffer) throw new Error('Download failed from all mirror endpoints');
       writeFileSync(tempZip, buffer);
 
       this.state = { ...this.state, progress: { phase: 'extract' } };
