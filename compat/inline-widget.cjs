@@ -34,48 +34,54 @@ module.exports = function installAgPulseInlineWidget() {
       box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
       transition: background-color 0.2s ease, color 0.2s ease !important;
     }
-    html:not(.dark) [data-testid="user-input-step"] .bg-card,
+    /* Light Mode */
+    [data-testid="user-input-step"] .bg-card,
+    body.theme-light [data-testid="user-input-step"] .bg-card,
+    body.light [data-testid="user-input-step"] .bg-card,
+    .light [data-testid="user-input-step"] .bg-card,
     [data-theme="light"] [data-testid="user-input-step"] .bg-card,
     [data-color-mode="light"] [data-testid="user-input-step"] .bg-card {
       background-color: #F0F0F0 !important;
       color: #1f2328 !important;
     }
-    html:not(.dark) [data-testid="user-input-step"] [data-quotable="true"],
-    [data-theme="light"] [data-testid="user-input-step"] [data-quotable="true"],
-    [data-color-mode="light"] [data-testid="user-input-step"] [data-quotable="true"] {
+    [data-testid="user-input-step"] .bg-card *,
+    [data-testid="user-input-step"] [data-quotable="true"],
+    [data-testid="user-input-step"] [data-quotable="true"] *,
+    [data-testid="user-input-step"] svg {
       color: #1f2328 !important;
+      fill: #1f2328 !important;
     }
-    html:not(.dark) [data-testid="user-input-step"] svg {
-      color: #1f2328 !important;
-    }
+
+    /* Dark Mode: White text, background matches sidebar/composer (#1c1c1c~#222222) */
+    body.dark [data-testid="user-input-step"] .bg-card,
+    body.theme-dark [data-testid="user-input-step"] .bg-card,
     .dark [data-testid="user-input-step"] .bg-card,
     [data-theme="dark"] [data-testid="user-input-step"] .bg-card,
     [data-color-mode="dark"] [data-testid="user-input-step"] .bg-card,
     [data-vscode-theme-kind="vscode-dark"] [data-testid="user-input-step"] .bg-card {
-      background-color: #D1D1D1 !important;
-      color: #18191c !important;
+      background-color: #222222 !important;
+      color: #ffffff !important;
     }
+    body.dark [data-testid="user-input-step"] .bg-card *,
+    body.theme-dark [data-testid="user-input-step"] .bg-card *,
+    .dark [data-testid="user-input-step"] .bg-card *,
+    [data-theme="dark"] [data-testid="user-input-step"] .bg-card *,
+    [data-color-mode="dark"] [data-testid="user-input-step"] .bg-card *,
+    [data-vscode-theme-kind="vscode-dark"] [data-testid="user-input-step"] .bg-card *,
+    body.dark [data-testid="user-input-step"] [data-quotable="true"],
+    body.dark [data-testid="user-input-step"] [data-quotable="true"] *,
+    body.dark [data-testid="user-input-step"] svg,
+    body.theme-dark [data-testid="user-input-step"] [data-quotable="true"],
+    body.theme-dark [data-testid="user-input-step"] [data-quotable="true"] *,
+    body.theme-dark [data-testid="user-input-step"] svg,
     .dark [data-testid="user-input-step"] [data-quotable="true"],
-    [data-theme="dark"] [data-testid="user-input-step"] [data-quotable="true"],
-    [data-color-mode="dark"] [data-testid="user-input-step"] [data-quotable="true"],
-    [data-vscode-theme-kind="vscode-dark"] [data-testid="user-input-step"] [data-quotable="true"] {
-      color: #18191c !important;
-    }
+    .dark [data-testid="user-input-step"] [data-quotable="true"] *,
     .dark [data-testid="user-input-step"] svg,
+    [data-theme="dark"] [data-testid="user-input-step"] [data-quotable="true"],
+    [data-theme="dark"] [data-testid="user-input-step"] [data-quotable="true"] *,
     [data-theme="dark"] [data-testid="user-input-step"] svg {
-      color: #18191c !important;
-    }
-    @media (prefers-color-scheme: dark) {
-      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] .bg-card {
-        background-color: #D1D1D1 !important;
-        color: #18191c !important;
-      }
-      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] [data-quotable="true"] {
-        color: #18191c !important;
-      }
-      html:not([data-theme="light"]):not(.light) [data-testid="user-input-step"] svg {
-        color: #18191c !important;
-      }
+      color: #ffffff !important;
+      fill: #ffffff !important;
     }
   `;
   if(!document.getElementById('ag-pulse-user-bubble-theme')){
@@ -83,8 +89,12 @@ module.exports = function installAgPulseInlineWidget() {
   }
 
   // Fisheye Timeline Navigation Scrubber
-  const timelineStyle = document.createElement('style');
-  timelineStyle.id = 'ag-pulse-timeline-style';
+  let timelineStyle = document.getElementById('ag-pulse-timeline-style');
+  if (!timelineStyle) {
+    timelineStyle = document.createElement('style');
+    timelineStyle.id = 'ag-pulse-timeline-style';
+    (document.head || document.documentElement).appendChild(timelineStyle);
+  }
   timelineStyle.textContent = `
     #ag-pulse-timeline {
       position: fixed;
@@ -93,66 +103,89 @@ module.exports = function installAgPulseInlineWidget() {
       display: none;
       flex-direction: column;
       align-items: flex-start;
-      padding: 8px 16px 8px 6px;
+      padding: 6px 6px 6px 6px;
       touch-action: none;
       background: transparent;
       pointer-events: auto;
       cursor: pointer;
+      transform: translateZ(0);
     }
     .ag-pulse-track {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
+      position: relative;
+      display: block;
+      width: 32px; /* 充分覆盖刻度线最大变长（26px）的判定范围 */
+      transform: translateZ(0);
     }
     .ag-pulse-tick {
-      height: 2px !important;
-      width: 8px;
-      border-radius: 1px;
+      height: 2px;
+      width: 6px; /* Codex 实测原图：6px 基础长度 */
+      border-radius: 0 !important; /* Codex 实测原图：直角矩形，绝不使用圆角 */
       transform-origin: left center;
-      position: relative;
-      transition: width 0.1s ease-out, background-color 0.1s ease-out, opacity 0.1s ease-out;
+      position: absolute;
+      left: 0;
+      transition: width 0.08s cubic-bezier(0.2, 0, 0, 1);
       cursor: pointer;
       box-shadow: none !important;
+      box-sizing: border-box !important;
+      image-rendering: pixelated;
     }
-    html:not(.dark) .ag-pulse-tick {
-      background-color: rgba(0, 0, 0, 0.26);
+
+    /* Light theme: lines light gray #d1d1d1, active viewport tick dark gray #737373 */
+    body.theme-light .ag-pulse-tick,
+    body.light .ag-pulse-tick,
+    .light .ag-pulse-tick,
+    [data-theme="light"] .ag-pulse-tick,
+    body:not(.dark):not(.theme-dark) .ag-pulse-tick {
+      background-color: #d1d1d1;
     }
+    body.theme-light .ag-pulse-tick.active-viewport,
+    body.light .ag-pulse-tick.active-viewport,
+    .light .ag-pulse-tick.active-viewport,
+    [data-theme="light"] .ag-pulse-tick.active-viewport,
+    body:not(.dark):not(.theme-dark) .ag-pulse-tick.active-viewport {
+      width: 6px; /* 当前对话刻度线不变长，只用颜色标注 */
+      background-color: #737373;
+    }
+
+    /* Dark theme: lines #464646, active viewport tick #a3a3a3 (严格匹配 Codex 实测原图) */
+    body.dark .ag-pulse-tick,
+    body.theme-dark .ag-pulse-tick,
     .dark .ag-pulse-tick,
     [data-theme="dark"] .ag-pulse-tick {
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: #464646;
     }
-    /* Current viewport focused turn */
-    html:not(.dark) .ag-pulse-tick.active-viewport {
-      width: 14px;
-      background-color: #007acc !important;
-    }
+    body.dark .ag-pulse-tick.active-viewport,
+    body.theme-dark .ag-pulse-tick.active-viewport,
     .dark .ag-pulse-tick.active-viewport,
     [data-theme="dark"] .ag-pulse-tick.active-viewport {
-      width: 14px;
-      background-color: #007acc !important;
+      width: 6px; /* 当前对话刻度线不变长，只用颜色标注 */
+      background-color: #a3a3a3;
     }
-    /* Hovered tick: only length & clean color change, NO thickness, NO glow */
-    html:not(.dark) .ag-pulse-tick.hovered {
-      background-color: #111111 !important;
-    }
-    .dark .ag-pulse-tick.hovered,
-    [data-theme="dark"] .ag-pulse-tick.hovered {
-      background-color: #ffffff !important;
-    }
-    /* Bookmark small dot on right end */
+
+    /* Bookmark small dot on right end: 采用与刻度线相同配色，不再使用蓝色 */
     .ag-pulse-tick.bookmarked::after {
       content: '';
       position: absolute;
-      left: calc(100% + 4px);
+      left: calc(100% + 3.5px);
       top: 50%;
       transform: translateY(-50%);
-      width: 3.5px;
-      height: 3.5px;
+      width: 3px;
+      height: 3px;
       border-radius: 50%;
-      background-color: #007acc;
       pointer-events: none;
     }
+    .dark .ag-pulse-tick.bookmarked::after,
+    body.dark .ag-pulse-tick.bookmarked::after,
+    [data-theme="dark"] .ag-pulse-tick.bookmarked::after {
+      background-color: #a3a3a3;
+    }
+    body.theme-light .ag-pulse-tick.bookmarked::after,
+    body.light .ag-pulse-tick.bookmarked::after,
+    [data-theme="light"] .ag-pulse-tick.bookmarked::after,
+    body:not(.dark):not(.theme-dark) .ag-pulse-tick.bookmarked::after {
+      background-color: #737373;
+    }
+
     /* Popover: Clean, no emoji, matches user design */
     #ag-pulse-timeline-popover {
       position: fixed;
@@ -162,25 +195,45 @@ module.exports = function installAgPulseInlineWidget() {
       padding: 12px 14px;
       z-index: 1000;
       opacity: 0;
-      pointer-events: none;
+      pointer-events: none !important;
+      display: none !important;
       transform: translateY(-50%) translateX(-4px);
-      transition: opacity 0.12s ease, transform 0.12s ease, top 0.05s ease-out;
+      transition: opacity 0.15s ease, transform 0.15s ease, top 0.05s ease-out;
       font-family: inherit;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+    }
+    #ag-pulse-timeline-popover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -8px;
+      right: 0;
+      background: transparent;
+      pointer-events: none !important;
+      display: none !important;
     }
     #ag-pulse-timeline-popover.visible {
       opacity: 1;
-      pointer-events: auto;
+      display: block !important;
+      pointer-events: auto !important;
       transform: translateY(-50%) translateX(0);
     }
+    #ag-pulse-timeline-popover.visible::before {
+      display: block !important;
+      pointer-events: auto !important;
+    }
     .dark #ag-pulse-timeline-popover,
+    body.dark #ag-pulse-timeline-popover,
     [data-theme="dark"] #ag-pulse-timeline-popover {
       background: #22242a;
       border: 1px solid rgba(255, 255, 255, 0.14);
       color: #ffffff;
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
     }
-    html:not(.dark) #ag-pulse-timeline-popover,
+    body.theme-light #ag-pulse-timeline-popover,
+    body.light #ag-pulse-timeline-popover,
+    body:not(.dark):not(.theme-dark) #ag-pulse-timeline-popover,
     [data-theme="light"] #ag-pulse-timeline-popover {
       background: #ffffff;
       border: 1px solid rgba(0, 0, 0, 0.12);
@@ -207,7 +260,7 @@ module.exports = function installAgPulseInlineWidget() {
       flex: none;
       background: transparent;
       border: none;
-      padding: 2px;
+      padding: 4px;
       cursor: pointer;
       color: #8c96aa;
       display: flex;
@@ -216,12 +269,29 @@ module.exports = function installAgPulseInlineWidget() {
       border-radius: 4px;
       transition: color 0.12s ease, transform 0.1s ease;
     }
-    .ag-popover-bookmark-btn:hover {
-      color: #007acc;
-      transform: scale(1.1);
+    .dark .ag-popover-bookmark-btn:hover,
+    body.dark .ag-popover-bookmark-btn:hover,
+    [data-theme="dark"] .ag-popover-bookmark-btn:hover {
+      color: #ffffff;
+      transform: scale(1.15);
     }
-    .ag-popover-bookmark-btn.active {
-      color: #007acc;
+    .dark .ag-popover-bookmark-btn.active,
+    body.dark .ag-popover-bookmark-btn.active,
+    [data-theme="dark"] .ag-popover-bookmark-btn.active {
+      color: #ffffff;
+    }
+    body.theme-light .ag-popover-bookmark-btn:hover,
+    body.light .ag-popover-bookmark-btn:hover,
+    [data-theme="light"] .ag-popover-bookmark-btn:hover,
+    body:not(.dark):not(.theme-dark) .ag-popover-bookmark-btn:hover {
+      color: #111111;
+      transform: scale(1.15);
+    }
+    body.theme-light .ag-popover-bookmark-btn.active,
+    body.light .ag-popover-bookmark-btn.active,
+    [data-theme="light"] .ag-popover-bookmark-btn.active,
+    body:not(.dark):not(.theme-dark) .ag-popover-bookmark-btn.active {
+      color: #111111;
     }
     .ag-popover-ai-text {
       font-size: 12px;
@@ -233,7 +303,7 @@ module.exports = function installAgPulseInlineWidget() {
       overflow: hidden;
     }
   `;
-  if (!document.getElementById('ag-pulse-timeline-style')) {
+  if (!timelineStyle.isConnected) {
     (document.head || document.documentElement).appendChild(timelineStyle);
   }
 
@@ -255,129 +325,306 @@ module.exports = function installAgPulseInlineWidget() {
   const track = timeline.querySelector('.ag-pulse-track');
 
   const bookmarkedTurns = new Set();
-  let lastTurnCount = 0;
+  const knownTurns = []; // 累积已知轮次，防止在长对话虚拟滚动折叠时左侧刻度线缩水
+  let activeTurnIdx = null;
+  let hoveredTurnIdx = null;
+  let popoverHideTimer = null;
+
+  function scheduleHidePopover() {
+    if (popoverHideTimer) clearTimeout(popoverHideTimer);
+    popoverHideTimer = setTimeout(() => {
+      popover.classList.remove('visible');
+      hoveredTurnIdx = null;
+      resetTicks();
+    }, 160); // 160ms 既留出移入卡片的平滑时间，移出时又干脆利落不粘滞
+  }
+
+  function cancelHidePopover() {
+    if (popoverHideTimer) {
+      clearTimeout(popoverHideTimer);
+      popoverHideTimer = null;
+    }
+  }
+
+  function isDarkTheme() {
+    return document.body.classList.contains('dark') || 
+           document.body.classList.contains('theme-dark') || 
+           document.documentElement.classList.contains('dark') ||
+           document.documentElement.getAttribute('data-theme') === 'dark' ||
+           getComputedStyle(document.body).backgroundColor.includes('16, 16, 16');
+  }
+
+  function resetTicks() {
+    const isDark = isDarkTheme();
+    const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
+    ticks.forEach(tick => {
+      const isActive = tick.classList.contains('active-viewport');
+      tick.style.width = '6px'; /* 当前对话刻度线与普通刻度线一致保持 6px，不变长 */
+      tick.style.backgroundColor = isActive ? (isDark ? '#a3a3a3' : '#737373') : (isDark ? '#464646' : '#d1d1d1');
+    });
+  }
+
+  function jumpToTurn(idx) {
+    const turnData = knownTurns[idx];
+    if (turnData && turnData.node && turnData.node.isConnected) {
+      turnData.node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
+    if (stepNodes[idx]) {
+      stepNodes[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    const chatArea = document.querySelector('.overflow-y-auto');
+    if (chatArea && knownTurns.length > 1) {
+      const pct = idx / (knownTurns.length - 1);
+      chatArea.scrollTo({ top: pct * (chatArea.scrollHeight - chatArea.clientHeight), behavior: 'smooth' });
+    }
+  }
 
   function updateTimeline() {
     if (disposed) return;
     const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
-    if (stepNodes.length <= 1) {
+    if (!stepNodes.length && !knownTurns.length) {
       timeline.style.display = 'none';
       popover.classList.remove('visible');
-      lastTurnCount = 0;
+      return;
+    }
+
+    // 发现并累积已知轮次，防止在长对话中滚到最底端时刻度线变少
+    stepNodes.forEach(step => {
+      const userText = (step.querySelector('[data-quotable="true"]')?.textContent || step.textContent || '').trim();
+      if (!userText) return;
+      let existing = knownTurns.find(t => t.userText === userText);
+      let aiText = '';
+      let next = step.closest('[role="article"]')?.nextElementSibling || step.parentElement?.nextElementSibling;
+      while (next && !aiText) {
+        if (next.querySelector('[data-testid="user-input-step"]')) break;
+        const prose = next.querySelector('.prose, [class*="markdown"], p');
+        if (prose) {
+          aiText = prose.textContent.trim();
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+      if (existing) {
+        existing.node = step;
+        if (aiText && !existing.aiText) existing.aiText = aiText;
+      } else {
+        knownTurns.push({ userText, aiText, node: step });
+      }
+    });
+
+    const displayCount = Math.max(stepNodes.length, knownTurns.length);
+    if (displayCount <= 1) {
+      timeline.style.display = 'none';
+      popover.classList.remove('visible');
       return;
     }
     timeline.style.display = 'flex';
 
-    const chatArea = stepNodes[0].closest('.overflow-y-auto') || document.body;
+    const chatArea = stepNodes[0]?.closest('.overflow-y-auto') || document.querySelector('.overflow-y-auto') || document.body;
     const chatRect = chatArea.getBoundingClientRect();
-    timeline.style.left = Math.round(chatRect.left + 8) + 'px';
-    timeline.style.top = '50%';
-    timeline.style.transform = 'translateY(-50%)';
+    
+    // 物理像素网格对齐，彻底根除高 DPI/缩放比例下由于次像素浮点舍入导致的“一粗一细”抗锯齿现象
+    const dpr = window.devicePixelRatio || 1;
+    const physicalHeight = Math.max(1, Math.round(2 * dpr)); // 严格对齐物理像素高度（如 2 physical px）
+    const cssHeight = (physicalHeight / dpr) + 'px';
+    const physicalStep = Math.max(physicalHeight + 1, Math.round(10 * dpr)); // 严格对齐物理像素步长（如 9~10 physical px）
+    const cssStep = physicalStep / dpr;
 
-    const availableH = Math.max(120, window.innerHeight * 0.75);
-    const gap = Math.max(2, Math.min(6, (availableH - stepNodes.length * 2) / Math.max(1, stepNodes.length - 1)));
-    track.style.gap = gap.toFixed(1) + 'px';
+    track.style.width = '32px';
+    track.style.height = (displayCount * cssStep) + 'px';
 
-    if (stepNodes.length !== lastTurnCount) {
-      lastTurnCount = stepNodes.length;
+    const totalHeight = displayCount * cssStep;
+    const topPx = Math.round(chatRect.top + (chatRect.height - totalHeight) / 2);
+    
+    timeline.style.left = Math.round(chatRect.left + 12) + 'px';
+    timeline.style.top = Math.max(60, topPx) + 'px';
+    timeline.style.transform = 'none';
+
+    // 仅当数量发生实质变化时重建 DOM 节点
+    const currentTickCount = track.querySelectorAll('.ag-pulse-tick').length;
+    if (displayCount !== currentTickCount) {
       track.innerHTML = '';
-      stepNodes.forEach((step, idx) => {
+      for (let idx = 0; idx < displayCount; idx++) {
+        const turnData = knownTurns[idx] || (stepNodes[idx] ? {
+          userText: (stepNodes[idx].querySelector('[data-quotable="true"]')?.textContent || stepNodes[idx].textContent || '').trim(),
+          node: stepNodes[idx]
+        } : null);
+
         const tick = document.createElement('div');
         tick.className = 'ag-pulse-tick';
         tick.dataset.turn = idx;
         if (bookmarkedTurns.has(idx)) tick.classList.add('bookmarked');
 
-        const userText = (step.querySelector('[data-quotable="true"]')?.textContent || step.textContent || '').trim();
-        let aiText = '';
-        let next = step.closest('[role="article"]')?.nextElementSibling || step.parentElement?.nextElementSibling;
-        while (next && !aiText) {
-          if (next.querySelector('[data-testid="user-input-step"]')) break;
-          const prose = next.querySelector('.prose, [class*="markdown"], p');
-          if (prose) {
-            aiText = prose.textContent.trim();
-            break;
-          }
-          next = next.nextElementSibling;
-        }
-        tick.dataset.userText = userText;
-        tick.dataset.aiText = aiText;
+        tick.dataset.userText = turnData?.userText || '';
+        tick.dataset.aiText = turnData?.aiText || '';
+        tick.style.top = (idx * cssStep) + 'px';
+        tick.style.height = cssHeight;
+        tick.style.minHeight = cssHeight;
+        tick.style.maxHeight = cssHeight;
 
+        // Click on tick: jump to step smoothly
         tick.addEventListener('click', (e) => {
           e.stopPropagation();
-          step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          jumpToTurn(idx);
         });
 
         track.appendChild(tick);
+      }
+    } else {
+      track.querySelectorAll('.ag-pulse-tick').forEach((tick, idx) => {
+        tick.style.top = (idx * cssStep) + 'px';
+        tick.style.height = cssHeight;
+        tick.style.minHeight = cssHeight;
+        tick.style.maxHeight = cssHeight;
       });
+    }
+
+    // 绑定真实对话区域的 scroll 事件
+    if (chatArea && !chatArea.__agScrollBound) {
+      chatArea.__agScrollBound = true;
+      chatArea.addEventListener('scroll', detectActiveViewport, { passive: true });
     }
 
     detectActiveViewport();
   }
 
   function detectActiveViewport() {
-    const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
     const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
-    if (!stepNodes.length || !ticks.length) return;
+    if (!ticks.length) return;
 
-    const vCenter = window.innerHeight / 2;
+    const chatArea = document.querySelector('.overflow-y-auto');
     let closestIdx = 0;
-    let minDiff = Infinity;
 
-    stepNodes.forEach((node, i) => {
-      const r = node.getBoundingClientRect();
-      const nodeCenter = r.top + r.height / 2;
-      const diff = Math.abs(vCenter - nodeCenter);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
+    if (chatArea) {
+      const isAtBottom = chatArea.scrollTop + chatArea.clientHeight >= chatArea.scrollHeight - 30;
+      const isAtTop = chatArea.scrollTop <= 20;
+
+      if (isAtBottom) {
+        closestIdx = ticks.length - 1;
+      } else if (isAtTop) {
+        closestIdx = 0;
+      } else {
+        const stepNodes = Array.from(document.querySelectorAll('[data-testid="user-input-step"]'));
+        if (stepNodes.length) {
+          const chatRect = chatArea.getBoundingClientRect();
+          const vCenter = chatRect.top + chatRect.height / 2;
+          let minDiff = Infinity;
+          let localClosestIdx = 0;
+
+          stepNodes.forEach((node, i) => {
+            const r = node.getBoundingClientRect();
+            const nodeCenter = r.top + r.height / 2;
+            const diff = Math.abs(vCenter - nodeCenter);
+            if (diff < minDiff) {
+              minDiff = diff;
+              localClosestIdx = i;
+            }
+          });
+
+          const matchedText = (stepNodes[localClosestIdx]?.querySelector('[data-quotable="true"]')?.textContent || stepNodes[localClosestIdx]?.textContent || '').trim();
+          const foundKnown = knownTurns.findIndex(t => t.userText === matchedText);
+          closestIdx = (foundKnown !== -1) ? foundKnown : localClosestIdx;
+        } else {
+          const pct = chatArea.scrollTop / Math.max(1, chatArea.scrollHeight - chatArea.clientHeight);
+          closestIdx = Math.min(ticks.length - 1, Math.round(pct * (ticks.length - 1)));
+        }
       }
-    });
+    }
+
+    activeTurnIdx = closestIdx;
+    const isDark = isDarkTheme();
 
     ticks.forEach((t, i) => {
-      t.classList.toggle('active-viewport', i === closestIdx);
+      const isActive = (i === closestIdx);
+      t.classList.toggle('active-viewport', isActive);
+      if (hoveredTurnIdx === null) {
+        t.style.width = '6px'; /* 当前对话刻度线保持 6px 不变长，只改变颜色 */
+        t.style.backgroundColor = isActive ? (isDark ? '#a3a3a3' : '#737373') : (isDark ? '#464646' : '#d1d1d1');
+      }
     });
   }
 
   if (!timeline.__agFisheyeBound) {
     timeline.__agFisheyeBound = true;
+
+    const onTimelineLeave = () => {
+      resetTicks(); // 鼠标一旦离开刻度线区域，立刻恢复原始 6px 长度与基础色
+      scheduleHidePopover();
+    };
+
+    const onPopoverEnter = () => {
+      cancelHidePopover();
+      resetTicks(); // 即使悬停在卡片上，左侧刻度线也保持原始长度与基础色
+    };
+
+    timeline.addEventListener('pointerenter', cancelHidePopover);
+    timeline.addEventListener('pointerleave', onTimelineLeave);
+    timeline.addEventListener('mouseleave', onTimelineLeave);
+    popover.addEventListener('pointerenter', onPopoverEnter);
+    popover.addEventListener('mouseenter', onPopoverEnter);
+    popover.addEventListener('pointerleave', scheduleHidePopover);
+    popover.addEventListener('mouseleave', scheduleHidePopover);
+
     timeline.addEventListener('pointermove', (e) => {
+      cancelHidePopover();
       const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
       if (!ticks.length) return;
 
       const cursorY = e.clientY;
-      const R = 45; // Focused radius
       let nearestTick = null;
       let minDistance = Infinity;
+      const isDark = isDarkTheme();
 
+      // 寻找唯一最靠近鼠标光标的刻度线
       ticks.forEach(tick => {
         const rect = tick.getBoundingClientRect();
         const tickCenterY = rect.top + rect.height / 2;
         const dist = Math.abs(cursorY - tickCenterY);
-
         if (dist < minDistance) {
           minDistance = dist;
           nearestTick = tick;
         }
+      });
 
-        if (dist < R) {
-          const ratio = Math.cos((dist / R) * (Math.PI / 2));
-          const width = 8 + 16 * ratio;
-          tick.style.width = width.toFixed(1) + 'px';
-          tick.style.opacity = (0.35 + 0.65 * ratio).toFixed(2);
-          tick.classList.toggle('hovered', dist < 8);
+      const R = 35; // 影响半径约 3.5 根刻度线（以 10px 为周期间隔：3.5 * 10 = 35px）
+      const nearestRect = nearestTick ? nearestTick.getBoundingClientRect() : null;
+      const nearestCenterY = nearestRect ? (nearestRect.top + nearestRect.height / 2) : cursorY;
+
+      ticks.forEach(tick => {
+        const rect = tick.getBoundingClientRect();
+        const tickCenterY = rect.top + rect.height / 2;
+        const dist = Math.abs(tickCenterY - nearestCenterY);
+        const isActive = tick.classList.contains('active-viewport');
+        const isTarget = (tick === nearestTick && minDistance < 35);
+
+        // 仅唯一一条最靠近鼠标的线变颜色（高亮纯白/纯黑），其余所有线绝对保持原有颜色（不变色！）
+        if (isTarget) {
+          tick.style.backgroundColor = isDark ? '#ffffff' : '#111111';
         } else {
-          tick.style.width = tick.classList.contains('active-viewport') ? '14px' : '8px';
-          tick.style.opacity = '0.35';
-          tick.classList.remove('hovered');
+          tick.style.backgroundColor = isActive ? (isDark ? '#a3a3a3' : '#737373') : (isDark ? '#464646' : '#d1d1d1');
+        }
+
+        // 长度呈山峰状陡峭三角形衰减（基础 6px，峰值 26px）
+        if (dist < R && minDistance < 35) {
+          const ratio = Math.max(0, 1 - (dist / R));
+          const width = 6 + 20 * ratio;
+          tick.style.width = width.toFixed(1) + 'px';
+        } else {
+          tick.style.width = '6px'; /* 当前对话刻度线保持 6px 不变长，只改变颜色 */
         }
       });
 
-      if (nearestTick && minDistance < 28) {
+      if (nearestTick && minDistance < 35) {
         const tIdx = parseInt(nearestTick.dataset.turn, 10);
+        hoveredTurnIdx = tIdx;
         const nRect = nearestTick.getBoundingClientRect();
         const isBookmarked = bookmarkedTurns.has(tIdx);
-        const rawUserText = nearestTick.dataset.userText || '';
+        const rawUserText = nearestTick.dataset.userText || (knownTurns[tIdx]?.userText || '');
         const quoteText = '“' + (rawUserText.length > 50 ? rawUserText.slice(0, 50) + '...' : rawUserText) + '”';
+        const aiText = nearestTick.dataset.aiText || (knownTurns[tIdx]?.aiText || '');
 
         popover.innerHTML = `
           <div class="ag-popover-top-row">
@@ -388,7 +635,7 @@ module.exports = function installAgPulseInlineWidget() {
               </svg>
             </button>
           </div>
-          ${nearestTick.dataset.aiText ? '<div class="ag-popover-ai-text">' + nearestTick.dataset.aiText + '</div>' : ''}
+          ${aiText ? '<div class="ag-popover-ai-text">' + aiText + '</div>' : ''}
         `;
 
         const bmBtn = popover.querySelector('#ag-btn-bookmark');
@@ -406,26 +653,296 @@ module.exports = function installAgPulseInlineWidget() {
           bmBtn.querySelector('svg').setAttribute('fill', nowBm ? 'currentColor' : 'none');
         };
 
-        popover.style.left = (nRect.right + 14) + 'px';
-        popover.style.top = nRect.top + 'px';
+        const trackRect = track.getBoundingClientRect();
+        const fixedPopoverLeft = Math.round(trackRect.left + 26 + 12); // 固定距离：以刻度线基准线向右固定 38px，绝不随刻度伸缩而左右跳动
+        popover.style.left = fixedPopoverLeft + 'px';
+        popover.style.top = Math.round(nRect.top + nRect.height / 2) + 'px';
         popover.classList.add('visible');
       } else {
-        popover.classList.remove('visible');
+        hoveredTurnIdx = null;
+        scheduleHidePopover();
       }
     });
 
-    timeline.addEventListener('pointerleave', () => {
-      const ticks = Array.from(track.querySelectorAll('.ag-pulse-tick'));
-      ticks.forEach(tick => {
-        tick.style.width = tick.classList.contains('active-viewport') ? '14px' : '8px';
-        tick.style.opacity = '0.35';
-        tick.classList.remove('hovered');
-      });
-      popover.classList.remove('visible');
+    // Click anywhere on timeline background: jump to nearest turn
+    timeline.addEventListener('click', (e) => {
+      const targetTick = e.target.closest('.ag-pulse-tick');
+      const idxToJump = targetTick ? parseInt(targetTick.dataset.turn, 10) : hoveredTurnIdx;
+      if (idxToJump !== null) {
+        jumpToTurn(idxToJump);
+      }
+    });
+
+    // Click on popover body (except bookmark button): jump to that turn
+    popover.addEventListener('click', (e) => {
+      if (e.target.closest('#ag-btn-bookmark')) return;
+      if (hoveredTurnIdx !== null) {
+        jumpToTurn(hoveredTurnIdx);
+      }
     });
 
     window.addEventListener('scroll', detectActiveViewport, true);
   }
+
+  // File Context Menu on local file links & pills
+  const fileMenuStyle = document.createElement('style');
+  fileMenuStyle.id = 'ag-pulse-file-menu-style';
+  fileMenuStyle.textContent = `
+    #ag-pulse-file-context-menu {
+      position: fixed;
+      z-index: 99999;
+      min-width: 190px;
+      border-radius: 8px;
+      padding: 4px;
+      font-family: inherit;
+      font-size: 13px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      user-select: none;
+      display: none;
+    }
+    .dark #ag-pulse-file-context-menu,
+    body.dark #ag-pulse-file-context-menu,
+    [data-theme="dark"] #ag-pulse-file-context-menu {
+      background: #1e2025;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+    }
+    body.theme-light #ag-pulse-file-context-menu,
+    body.light #ag-pulse-file-context-menu,
+    body:not(.dark):not(.theme-dark) #ag-pulse-file-context-menu,
+    [data-theme="light"] #ag-pulse-file-context-menu {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      color: #1a202c;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    .ag-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.1s ease;
+      font-size: 12.5px;
+    }
+    .dark .ag-menu-item:hover,
+    body.dark .ag-menu-item:hover,
+    [data-theme="dark"] .ag-menu-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+    body.theme-light .ag-menu-item:hover,
+    body.light .ag-menu-item:hover,
+    body:not(.dark):not(.theme-dark) .ag-menu-item:hover,
+    [data-theme="light"] .ag-menu-item:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: #000000;
+    }
+    .ag-menu-item svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+    .ag-menu-separator {
+      height: 1px;
+      margin: 4px 6px;
+    }
+    .dark .ag-menu-separator,
+    body.dark .ag-menu-separator {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    body.theme-light .ag-menu-separator,
+    body:not(.dark):not(.theme-dark) .ag-menu-separator {
+      background: rgba(0, 0, 0, 0.08);
+    }
+    #ag-pulse-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(24, 24, 27, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      z-index: 100000;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    #ag-pulse-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  `;
+  if (!document.getElementById('ag-pulse-file-menu-style')) {
+    (document.head || document.documentElement).appendChild(fileMenuStyle);
+  }
+
+  let fileMenu = document.getElementById('ag-pulse-file-context-menu');
+  if (!fileMenu) {
+    fileMenu = document.createElement('div');
+    fileMenu.id = 'ag-pulse-file-context-menu';
+    document.body.appendChild(fileMenu);
+  }
+  let fileToast = document.getElementById('ag-pulse-toast');
+  if (!fileToast) {
+    fileToast = document.createElement('div');
+    fileToast.id = 'ag-pulse-toast';
+    document.body.appendChild(fileToast);
+  }
+
+  function showFileToast(text) {
+    fileToast.textContent = text;
+    fileToast.classList.add('show');
+    setTimeout(() => fileToast.classList.remove('show'), 1800);
+  }
+
+  function invokeFileOp(action, path) {
+    return new Promise(resolve => {
+      const hostFn = window.agPulseHost ? (window.agPulseHost[action + 'File'] || window.agPulseHost[action]) : null;
+      if (typeof hostFn === 'function') {
+        hostFn(path).then(resolve).catch(err => resolve({ error: String(err) }));
+        return;
+      }
+      if (typeof window.__agPulseFileOp === 'function') {
+        window.__agPulseFileOpCallbacks = window.__agPulseFileOpCallbacks || new Map();
+        const reqId = Date.now() + Math.random();
+        window.__agPulseFileOpCallbacks.set(reqId, resolve);
+        window.__agPulseFileOp(JSON.stringify({ reqId, action, path }));
+        setTimeout(() => {
+          if (window.__agPulseFileOpCallbacks.has(reqId)) {
+            window.__agPulseFileOpCallbacks.delete(reqId);
+            resolve({ error: 'timeout' });
+          }
+        }, 5000);
+        return;
+      }
+      resolve({ error: 'Backend operation unavailable' });
+    });
+  }
+
+  function parseFilePath(el) {
+    let raw = el.getAttribute('data-uri') || 
+              el.getAttribute('title') || 
+              el.getAttribute('href') || 
+              el.dataset?.path || 
+              el.dataset?.filepath;
+    
+    if (!raw && el.closest('.inline-pill')) {
+      const pill = el.closest('.inline-pill');
+      raw = pill.getAttribute('title') || pill.getAttribute('data-uri') || pill.dataset?.path;
+    }
+
+    if (!raw) return null;
+
+    if (raw.startsWith('file:///')) {
+      raw = decodeURIComponent(raw.slice(8));
+      if (/^[a-zA-Z]:/.test(raw) || /^\/[a-zA-Z]:/.test(raw)) {
+        raw = raw.replace(/^\//, '');
+      }
+    }
+    
+    if (/^[a-zA-Z]:/.test(raw)) {
+      raw = raw.replace(/\//g, '\\');
+    }
+    return raw;
+  }
+
+  const onContextMenu = (e) => {
+    const target = e.target.closest('.inline-pill, [data-uri], a[href], [data-path]');
+    if (!target) {
+      fileMenu.style.display = 'none';
+      return;
+    }
+
+    const filePath = parseFilePath(target);
+    if (!filePath || (!filePath.includes('\\') && !filePath.includes('/') && !filePath.includes('.'))) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    fileMenu.innerHTML = `
+      <div class="ag-menu-item" data-action="open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        <span>打开文件</span>
+      </div>
+      <div class="ag-menu-item" data-action="reveal">
+        <svg viewBox="0 0 24 24" fill="#eab308" stroke="#ca8a04" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>在File Explorer中打开</span>
+      </div>
+      <div class="ag-menu-item" data-action="openWith">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <span>打开方式</span>
+      </div>
+      <div class="ag-menu-separator"></div>
+      <div class="ag-menu-item" data-action="copyPath">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>复制路径</span>
+      </div>
+      <div class="ag-menu-item" data-action="copyContent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        <span>复制文件内容</span>
+      </div>
+    `;
+
+    fileMenu.style.display = 'block';
+    const mRect = fileMenu.getBoundingClientRect();
+    let posX = e.clientX;
+    let posY = e.clientY;
+    if (posX + mRect.width > window.innerWidth) posX = window.innerWidth - mRect.width - 8;
+    if (posY + mRect.height > window.innerHeight) posY = window.innerHeight - mRect.height - 8;
+
+    fileMenu.style.left = posX + 'px';
+    fileMenu.style.top = posY + 'px';
+
+    fileMenu.querySelectorAll('.ag-menu-item').forEach(item => {
+      item.onclick = async (me) => {
+        me.stopPropagation();
+        fileMenu.style.display = 'none';
+        const action = item.dataset.action;
+
+        if (action === 'copyPath') {
+          await navigator.clipboard.writeText(filePath);
+          showFileToast('已复制路径: ' + filePath.split(/[/\\\\]/).pop());
+        } else if (action === 'copyContent') {
+          const res = await invokeFileOp('read', filePath);
+          if (res.ok && res.content != null) {
+            await navigator.clipboard.writeText(res.content);
+            showFileToast('已复制文件内容 (' + res.content.length + ' 字符)');
+          } else {
+            showFileToast('读取文件失败: ' + (res.error || '未知错误'));
+          }
+        } else if (action === 'open') {
+          const res = await invokeFileOp('open', filePath);
+          if (res.ok) showFileToast('已在系统默认应用中打开');
+        } else if (action === 'reveal') {
+          const res = await invokeFileOp('reveal', filePath);
+          if (res.ok) showFileToast('已在资源管理器中定位');
+        } else if (action === 'openWith') {
+          await invokeFileOp('openWith', filePath);
+        }
+      };
+    });
+  };
+
+  const onPointerDownGlobal = (e) => {
+    if (!e.target.closest('#ag-pulse-file-context-menu')) {
+      fileMenu.style.display = 'none';
+    }
+  };
+  const onKeyDownGlobal = (e) => {
+    if (e.key === 'Escape') fileMenu.style.display = 'none';
+  };
+
+  document.addEventListener('contextmenu', onContextMenu, true);
+  document.addEventListener('pointerdown', onPointerDownGlobal);
+  document.addEventListener('keydown', onKeyDownGlobal);
+
   const ID='ag-pulse-status-bar';
   // Host-specific discovery stays outside the shared widget. The IDE has no
   // /c/<id> URL, and must never inherit the desktop's conversation fallback.
@@ -1215,7 +1732,7 @@ module.exports = function installAgPulseInlineWidget() {
   const timerId=setInterval(()=>{mount();fit();tick();position();updateTimeline();if(conversationId()!==lastConversation||Date.now()-lastFetch>(document.hidden?10000:2200))refresh();},1000);
   window.__agPulseDispose=()=>{
     disposed=true;requestEpoch++;pending=false;refreshRequest=null;stopDensityMotion();densityFrame=null;densityProbe=null;
-    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();userBubbleStyle?.remove();timelineStyle?.remove();timeline?.remove();popover?.remove();
+    clearInterval(timerId);clearTimeout(hoverTimer);clearTimeout(openTimer);if(layoutFrame!==null)cancelAnimationFrame(layoutFrame);observer.disconnect();resizeObserver?.disconnect();themeController?.dispose();preferences.dispose();hide();usageDashboard?.dispose();updateMenu?.dispose();node?.remove();userBubbleStyle?.remove();timelineStyle?.remove();timeline?.remove();popover?.remove();fileMenuStyle?.remove();fileMenu?.remove();fileToast?.remove();document.removeEventListener('contextmenu',onContextMenu,true);document.removeEventListener('pointerdown',onPointerDownGlobal);document.removeEventListener('keydown',onKeyDownGlobal);
     document.removeEventListener('keydown',onKey);document.removeEventListener('pointerdown',onPointer);
     document.removeEventListener('scroll',scheduleLayout,true);window.removeEventListener('resize',scheduleLayout);
     densityMedia.removeEventListener('change',stopDensityMotion);

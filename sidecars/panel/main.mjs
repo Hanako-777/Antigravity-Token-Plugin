@@ -51,7 +51,7 @@ const integration = new RuntimeUi({
   preferences,
   updater,
   owner:ownership?.token,owns:()=>ownership?ownership.isOwner():true,
-  source: makeRendererSource(readFileSync(join(HERE,'..','..','compat','i18n.cjs'),'utf8'),readFileSync(join(HERE,'..','..','compat','inline-widget.cjs'),'utf8'),readFileSync(join(HERE,'..','..','compat','theme.cjs'),'utf8'),ownership?.token,ownership?.startedAt,updateSource()+usageSource()),
+  source: () => makeRendererSource(readFileSync(join(HERE,'..','..','compat','i18n.cjs'),'utf8'),readFileSync(join(HERE,'..','..','compat','inline-widget.cjs'),'utf8'),readFileSync(join(HERE,'..','..','compat','theme.cjs'),'utf8'),ownership?.token,ownership?.startedAt,updateSource()+usageSource()),
   dataDir: platformPaths().data,
   enabled: () => { const s = runtimeSettings(); return s.enabled !== false && s.inline !== false && s.mode !== 'legacy'; },
 });

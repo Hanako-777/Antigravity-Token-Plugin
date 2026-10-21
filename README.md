@@ -9,7 +9,7 @@
 Token throughput, cache hits, and context usage right beside the model selector. Hover to expand refined detail popovers with clean typography and inline progress bars; explore historical consumption trends with a dedicated Codex-style token usage dashboard.<br>
 Unobtrusive summary by default. Rich, actionable metrics at your fingertips.
 
-[![Version](https://img.shields.io/badge/version-1.0.3-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.4-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
 [![Original Author](https://img.shields.io/badge/original%20author-YOU--SHOULD--KNOW--ME-ff79c6?style=flat-square&labelColor=252936)](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)

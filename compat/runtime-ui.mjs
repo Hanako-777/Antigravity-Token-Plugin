@@ -120,6 +120,11 @@ function rendererBridge(binding) {
     setPreferences: input => call('preferences', input),
     report: input => { void call('diagnostic', input); },
     openHUD: () => call('openHUD', {}),
+    openFile: path => call('openFile', { path }),
+    revealFile: path => call('revealFile', { path }),
+    openWith: path => call('openWith', { path }),
+    openWithFile: path => call('openWith', { path }),
+    readFile: path => call('readFile', { path }),
   };
 }
 
@@ -200,6 +205,56 @@ export class RuntimeUi {
           result = { error: String(e) };
         }
       }
+      else if (input.type === 'openFile') {
+        try {
+          const { exec } = await import('node:child_process');
+          const raw = String(input.input?.path || '');
+          const p = raw.replace(/^[/\\]+/, '').replace(/^([a-zA-Z]):/, '$1:');
+          if (process.platform === 'win32') exec(`start "" "${p}"`);
+          else if (process.platform === 'darwin') exec(`open "${p}"`);
+          else exec(`xdg-open "${p}"`);
+          result = { ok: true };
+        } catch (e) {
+          result = { error: String(e) };
+        }
+      }
+      else if (input.type === 'revealFile') {
+        try {
+          const { spawn } = await import('node:child_process');
+          const raw = String(input.input?.path || '');
+          const p = raw.replace(/^[/\\]+/, '').replace(/^([a-zA-Z]):/, '$1:');
+          if (process.platform === 'win32') spawn('explorer.exe', [`/select,${p}`], { detached: true, stdio: 'ignore' });
+          else if (process.platform === 'darwin') spawn('open', ['-R', p], { detached: true, stdio: 'ignore' });
+          else spawn('xdg-open', [p], { detached: true, stdio: 'ignore' });
+          result = { ok: true };
+        } catch (e) {
+          result = { error: String(e) };
+        }
+      }
+      else if (input.type === 'openWith') {
+        try {
+          const { exec } = await import('node:child_process');
+          const raw = String(input.input?.path || '');
+          const p = raw.replace(/^[/\\]+/, '').replace(/^([a-zA-Z]):/, '$1:');
+          if (process.platform === 'win32') exec(`rundll32.exe shell32.dll,OpenAs_RunDLL "${p}"`);
+          else if (process.platform === 'darwin') exec(`open "${p}"`);
+          else exec(`xdg-open "${p}"`);
+          result = { ok: true };
+        } catch (e) {
+          result = { error: String(e) };
+        }
+      }
+      else if (input.type === 'readFile') {
+        try {
+          const { readFile } = await import('node:fs/promises');
+          const raw = String(input.input?.path || '');
+          const p = raw.replace(/^[/\\]+/, '').replace(/^([a-zA-Z]):/, '$1:');
+          const content = await readFile(p, 'utf-8');
+          result = { ok: true, content };
+        } catch (e) {
+          result = { error: String(e) };
+        }
+      }
       else if (input.type === 'preferences' && this.preferences) {
         const value=input.input;
         if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!['language','languageGuideDismissed','usageGuideDismissed'].includes(key)))throw new Error('Invalid preferences request');
@@ -231,7 +286,8 @@ export class RuntimeUi {
       await connection.command('Page.enable');
       await connection.command('Runtime.enable');
       await connection.command('Runtime.addBinding', { name: this.binding });
-      const guardedSource = 'if (location.origin === ' + JSON.stringify(connection.origin) + ') {' + this.source + '}';
+      const currentSrc = typeof this.source === 'function' ? this.source() : this.source;
+      const guardedSource = 'if (location.origin === ' + JSON.stringify(connection.origin) + ') {' + currentSrc + '}';
       connection.guardedSource = guardedSource;
       connection.script = (await connection.command('Page.addScriptToEvaluateOnNewDocument', { source: guardedSource })).identifier;
       if(this.stopping||!await this.owns()){await connection.command('Page.removeScriptToEvaluateOnNewDocument',{identifier:connection.script});throw new Error('Sidecar ownership changed');}
@@ -283,6 +339,8 @@ export class RuntimeUi {
           // Reinstall missing hooks rather than waiting forever for a composer.
           if (status && (!status.installed || !status.bridge)) {
             if(!await this.owns())break;
+            const currentSrc = typeof this.source === 'function' ? this.source() : this.source;
+            connection.guardedSource = 'if (location.origin === ' + JSON.stringify(connection.origin) + ') {' + currentSrc + '}';
             const recovery = await connection.command('Runtime.evaluate', { expression: connection.guardedSource });
             if (recovery.exceptionDetails) throw new Error('Widget recovery failed');
           }
