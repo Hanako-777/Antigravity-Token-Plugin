@@ -1,8 +1,8 @@
 {
   "name": "antigravity-powertoys",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
-  "description": "All-in-One productivity powerpack for Antigravity: token analytics HUD, fisheye conversation timeline, local file context menu, and chat UI refinements",
+  "description": "All-in-One productivity powerpack for Antigravity: token analytics HUD, local file context menu, and chat UI refinements",
   "license": "MIT",
   "scripts": {
     "test": "node --test sidecars/panel/tests/*.test.mjs cli/tests/*.test.mjs",

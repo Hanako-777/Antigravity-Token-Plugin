@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.5 — 2026-11-04
+
+- 移除自定义时间轴导航器（Conversation Timeline Scrubber）：
+  - 由于 Google Antigravity 新版官方已原生集成对话滚动时间轴导航，为避免功能重叠与视觉冗余，平滑移除自定义时间轴刻度线与相关监听；
+  - 运行时自动清理旧版本遗留的 DOM 节点与样式，大幅降低前端监听开销与包体积；
+  - 完整保留 Token Analytics HUD、本地文件超链接右键菜单（File Context Menu）与极简无边框气泡等核心功能。
+
 ## 1.0.4 — 2026-10-21
 
 - 新增本地文件超链接右键操作菜单（File Context Menu）：
