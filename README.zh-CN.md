@@ -9,7 +9,7 @@
 集用量感知、文件流转与界面美化于一体的 Antigravity 全能增强套件。正文本地文件超链接一键在资源管理器或外部默认应用打开；模型选择旁直观把控 Token 生成速率与额度；更有独立的 Codex 风格全功能用量分析中心。<br>
 极简常驻，沉浸交互，全面掌控你的 Antigravity 工作台。
 
-[![Version](https://img.shields.io/badge/version-1.0.5-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.6-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
 [![Original Author](https://img.shields.io/badge/original%20author-YOU--SHOULD--KNOW--ME-ff79c6?style=flat-square&labelColor=252936)](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)

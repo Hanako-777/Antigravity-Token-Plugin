@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6 — 2026-11-25
+
+- 适配 Antigravity 2.35.1+ 本地接口凭据机制：
+  - 由于新版 Antigravity `language_server.exe` 不再在启动命令行参数中传递 `--csrf_token`，而是通过环境变量 `ANTIGRAVITY_LS_ADDRESS` 与 `ANTIGRAVITY_CSRF_TOKEN` 注入给 Sidecar；
+  - 更新 `sidecars/panel/client.mjs`，优先使用宿主注入的环境变量地址与凭据（同时兼容 HTTP 与 HTTPS 本地端点），并保留旧版本命令行发现逻辑作为兜底，解决更新后统计离线、面板无数据的问题。
+
 ## 1.0.5 — 2026-11-04
 
 - 移除自定义时间轴导航器（Conversation Timeline Scrubber）：

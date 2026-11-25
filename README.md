@@ -9,7 +9,7 @@
 An all-in-one productivity powerpack seamlessly integrating usage analytics, local file navigation, and UI aesthetics for Google Antigravity. Reveal and open local file links directly in your operating system's native tools; monitor token throughput and quota reset countdowns inline; or dive into a dedicated Codex-style Token Analytics Dashboard.<br>
 Unobtrusive by default. Rich, actionable workspace power at your fingertips.
 
-[![Version](https://img.shields.io/badge/version-1.0.5-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.6-91adff?style=flat-square&labelColor=252936)](CHANGELOG.md)
 [![Original Author](https://img.shields.io/badge/original%20author-YOU--SHOULD--KNOW--ME-ff79c6?style=flat-square&labelColor=252936)](https://github.com/YOU-SHOULD-KNOW-ME/antigrative-dashboard)
 [![Platforms](https://img.shields.io/badge/host-Windows%20%7C%20Linux%20%7C%20macOS-83d8b9?style=flat-square&labelColor=252936)](COMPATIBILITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d4d9e6?style=flat-square&labelColor=252936)](LICENSE)

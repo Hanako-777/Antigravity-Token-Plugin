@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
-import { request } from 'node:http';
+import { request as httpRequest } from 'node:http';
+import { request as httpsRequest } from 'node:https';
 import { platformPaths } from '../../compat/platform.mjs';
 import { discoverProcesses } from './discovery.mjs';
 import { TrajectoryJson } from './trajectory-json.mjs';
@@ -44,6 +45,15 @@ export class AntigravityClient {
 
   async discoverNow() {
     this.server=null;
+    if (process.env.ANTIGRAVITY_LS_ADDRESS && process.env.ANTIGRAVITY_CSRF_TOKEN) {
+      const addr = String(process.env.ANTIGRAVITY_LS_ADDRESS).trim();
+      const addrPort = Number(addr.match(/:(\d+)(?:\/|$)/)?.[1]);
+      if (Number.isInteger(addrPort) && addrPort > 0) {
+        this.server = { port: addrPort, csrf: process.env.ANTIGRAVITY_CSRF_TOKEN, https: addr.startsWith('https://'), pid: null };
+        this.discoveredAt = this.now();
+        return this.server;
+      }
+    }
     // A sidecar can outlive a renderer/backend restart. Its injected token may
     // then refer to the previous LS instance; pair the current log port with
     // the current standalone process credential instead of mixing generations.
@@ -75,7 +85,8 @@ export class AntigravityClient {
         const started=this.now();
         // A rejected stream destroys its socket. Do not leave that socket in
         // the shared agent where an immediate quota refresh could reuse it.
-        const req = request({ hostname: '127.0.0.1', port: server.port, method: 'POST', path: SERVICE + method, ...(projection?{agent:false}:{}),
+        const reqFn = server.https ? httpsRequest : httpRequest;
+        const req = reqFn({ hostname: '127.0.0.1', port: server.port, method: 'POST', path: SERVICE + method, ...(server.https ? { rejectUnauthorized: false } : {}), ...(projection?{agent:false}:{}),
           headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '1', 'x-codeium-csrf-token': server.csrf, 'Content-Length': Buffer.byteLength(data) } }, res => {
           const projected=projection?new TrajectoryJson():null;
           let text = '',bytes=0,failed=false;
